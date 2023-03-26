@@ -21,4 +21,10 @@ async def on_ready():
 async def test(ctx):
     await ctx.reply("Test Complete.")
 
+@bot.command()
+async def ping(ctx):
+    await ctx.send(
+        f"Pong! My ping is  `{round(bot.latency * 1000)}ms.`"
+    )
+
 bot.run(os.getenv("TOKEN"))
