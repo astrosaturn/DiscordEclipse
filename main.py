@@ -19,22 +19,10 @@ async def load():
         if filename.endswith('.py'):
             await bot.load_extension(f'cogs.{filename[:-3]}')
 
-
 @bot.event
 async def on_ready():
     await load()
     print(f"Logged in!")
-
-@bot.command()
-async def test(ctx):
-    await ctx.reply("Test Complete.")
-
-@bot.command()
-async def ping(ctx):
-    await ctx.send(
-        f"Pong! My ping is  `{round(bot.latency * 1000)}ms.`"
-    )
-
 
 bot.run(os.getenv("TOKEN"))
 
