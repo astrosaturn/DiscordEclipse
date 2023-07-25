@@ -13,7 +13,6 @@ class Fun(commands.Cog):
 
 #TODO: make these games linked with XP and a currency system
 
-
     #I am well aware I could just pick a random win, lose, or tie condition
     #However I wanted to show what the bot had picked to the player
     #So it seemed like an actual game
@@ -37,6 +36,9 @@ class Fun(commands.Cog):
             outcome = "You lose!"
         
         await ctx.reply(f"{outcome} I chose `{bot_choice}` and you chose `{user_choice}`!")
+
+
+    
 
 async def setup(bot):
     await bot.add_cog(Fun(bot))
