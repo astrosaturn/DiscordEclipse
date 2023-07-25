@@ -6,9 +6,13 @@ class Moderation(commands.Cog):
         self.bot = bot
         self.last_member = None
     
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("Moderation cog ready.")
+
     @commands.command()
-    async def cogtest(ctx):
-        ctx.reply("Cogs are functioning")
+    async def cogtest(self, ctx):
+        await ctx.reply("congrats, you arent as worthless as you thought")
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))

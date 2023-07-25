@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext import commands
 import os
@@ -13,8 +14,15 @@ bot = commands.Bot(
     intents=intents,
 )
 
+async def load():
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            await bot.load_extension(f'cogs.{filename[:-3]}')
+
+
 @bot.event
 async def on_ready():
+    await load()
     print(f"Logged in!")
 
 @bot.command()
@@ -27,4 +35,6 @@ async def ping(ctx):
         f"Pong! My ping is  `{round(bot.latency * 1000)}ms.`"
     )
 
+
 bot.run(os.getenv("TOKEN"))
+
