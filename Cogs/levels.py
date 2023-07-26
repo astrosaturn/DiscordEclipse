@@ -1,12 +1,10 @@
 import discord
 import os
 import mariadb
-import sys
 from discord.ext import commands
 import random 
 from random import *
 import math
-import time
 # Connect to MariaDB Platform
 try:
     conn = mariadb.connect(
@@ -17,7 +15,7 @@ try:
         database=os.getenv("DATABASE")
     )
 except mariadb.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
+    print(f"Error connecting to MariaDB Platform in levels.py: {e}")
 
 cur = conn.cursor()
 
@@ -31,9 +29,9 @@ class Levels(commands.Cog):
     async def on_ready(self):
         print("Levels cog ready.")
 
-    
         
-    #Get XP per message sent.
+    #Let users gain XP through sending messages, figure out how to add a cooldown
+    #to prevent further spam.
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.id == 485057961358524427:
@@ -101,7 +99,7 @@ class Levels(commands.Cog):
         )
         author_level = cur.fetchone()
         author_level = int(author_level[0])
-        xp_to_level_up = math.floor(100*(1.10) ** author_level)
+        xp_to_level_up = math.floor(100*(1.30) ** author_level)
         cur.execute(
             "SELECT current_xp FROM users WHERE user_id=?", (author_id,)    
         )
