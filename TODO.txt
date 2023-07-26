@@ -1,0 +1,1 @@
+- Take all Level and currency commands and put it into one script called ProfileManager. Use Def to reference into other scripts like def add_currency or something
