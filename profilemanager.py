@@ -53,8 +53,13 @@ def get_user_level(user_id: int):
             "SELECT level FROM users WHERE user_id=?", (user_id,)
         )
     level = cur.fetchone()
-    level = int(level[0])
-    return level
+    if level is not None:
+        level = int(level[0])
+        return level
+    else:
+        initiate_user(user_id=user_id)            
+        level = int(level[0])
+        return level
 
 #Take the xp you want to add, and the user's id and add the XP to the user in the DB
 def set_user_xp(xp_amount: int, user_id: int):

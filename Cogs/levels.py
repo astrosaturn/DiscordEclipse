@@ -57,6 +57,8 @@ class Levels(commands.Cog):
 
     @commands.command()
     async def level(self, ctx, *, target: discord.Member = None):
+        #If you dont choose someone to inspect, 
+        #It picks you.
         if target == None:
             target_id = ctx.author.id
             target_name = ctx.author.name
@@ -65,8 +67,8 @@ class Levels(commands.Cog):
             target_id = target.id
             target_name = target.name
             target_avatar = target.avatar
-        author_id = ctx.author.id
 
+        #1 in 20 change to include @snowytaiyaki's art
         funny = False
         funny_chance = randint(1,20)
         if funny_chance == 14:
@@ -75,6 +77,7 @@ class Levels(commands.Cog):
             funny = False
 
         target_level = get_user_level(user_id=target_id)
+
         xp_to_level_up = math.floor(100*(1.30) ** target_level)
         if xp_to_level_up > 2000:
             xp_to_level_up = 2000
@@ -94,7 +97,7 @@ class Levels(commands.Cog):
         embed.add_field(name=f"Level: {target_level}", value=f"XP: {target_xp}\n {xp_left} XP left until level {next_level}!")
         author = ctx.message.author
         pfp = author.avatar
-        embed.set_footer(text=author_id, icon_url=pfp)
+        embed.set_footer(text=target_id, icon_url=pfp)
         embed.set_thumbnail(url=target_avatar)
         if funny == True:
             if next_level >= 15:
