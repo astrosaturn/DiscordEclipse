@@ -68,6 +68,13 @@ class Levels(commands.Cog):
             target_name = target.name
             target_avatar = target.avatar
 
+        user_exists = check_db_for_user(user_id=target_id)
+        if user_exists == None:
+            initiate_user(user_id=target_id)
+            target_level = get_user_level(user_id=target_id)
+        else:
+            target_level = get_user_level(user_id=target_id)
+
         #1 in 20 change to include @snowytaiyaki's art
         funny = False
         funny_chance = randint(1,20)
@@ -75,8 +82,6 @@ class Levels(commands.Cog):
             funny = True
         else:
             funny = False
-
-        target_level = get_user_level(user_id=target_id)
 
         xp_to_level_up = math.floor(100*(1.30) ** target_level)
         if xp_to_level_up > 2000:

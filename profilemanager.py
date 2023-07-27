@@ -31,7 +31,7 @@ def get_user_xp(user_id: int):
 #Insert a user into the database
 def initiate_user(user_id: int):
     cur.execute(
-        "INSERT INTO users (user_id, level, current_xp, credits) VALUES (?, 1, 100, 0)", (user_id,))
+        "INSERT INTO users (user_id, level, current_xp, credits) VALUES (?, 1, 0, 0)", (user_id,))
     conn.commit()
 
 #Check if a user ID currently exists in the database
@@ -40,7 +40,7 @@ def check_db_for_user(user_id: int):
             "SELECT user_id FROM users WHERE user_id=?", (user_id,)            
     )
     userid = cur.fetchone()
-    
+    print(user_id)
     if userid is not None:
         userid = int(userid[0])
         return userid
@@ -71,8 +71,8 @@ def set_user_xp(xp_amount: int, user_id: int):
 #Change the level of the user to new_level
 def level_set(new_level: int, user_id: int):
     cur.execute(
-                "UPDATE users SET level=? WHERE user_id=?", (new_level, user_id,)                   
-            )
+            "UPDATE users SET level=? WHERE user_id=?", (new_level, user_id,)                   
+        )
     conn.commit()
 
 #Add a user's xp together
