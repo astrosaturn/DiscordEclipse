@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import random
+from profilemanager import *
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -34,8 +35,11 @@ class Fun(commands.Cog):
             outcome = "win"
         else:
             outcome = "You lose!"
+        
         if outcome == "win":
-            await ctx.reply(f"You win! I chose `{bot_choice}` and you chose `{user_choice}`!")
+            set_user_xp(xp_amount=15, user_id=user_id)
+            await ctx.reply(f"You win! I chose `{bot_choice}` and you chose `{user_choice}`! You have been given 15 XP for winning!")
+        
         else:
             await ctx.reply(f"You lose! I chose `{bot_choice}` and you chose `{user_choice}`!")
 

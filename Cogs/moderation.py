@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from profilemanager import *
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -67,7 +68,24 @@ class Moderation(commands.Cog):
                 await ctx.reply("You must input a time in seconds.")
         else:
             await ctx.reply("You do not have permission to use this command!")
+    
+    #Set a user's level
+    @commands.command()
+    async def setlevel(self, ctx:commands.Context, user:discord.User, level:int):
+        user = user.id
+        if ctx.author.guild_permissions.manage_roles:
+            if user is not None:
+                if level is not None:
+                    level_set(new_level=level,user_id=user)
+                    await ctx.reply(f"<@{user}>'s level has been set to {level}")
+                else:
+                    await ctx.reply(f"You must input a valid level.")
+            else:
+                await ctx.reply(f"You must input a valid user!")
+        else:
+            await ctx.reply(f"You do not have permission to do that!") 
 
+    
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))
