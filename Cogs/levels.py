@@ -67,6 +67,13 @@ class Levels(commands.Cog):
             target_avatar = target.avatar
         author_id = ctx.author.id
 
+        funny = False
+        funny_chance = randint(1,20)
+        if funny_chance == 14:
+            funny = True
+        else:
+            funny = False
+
         target_level = get_user_level(user_id=target_id)
         xp_to_level_up = math.floor(100*(1.30) ** target_level)
         if xp_to_level_up > 2000:
@@ -89,6 +96,11 @@ class Levels(commands.Cog):
         pfp = author.avatar
         embed.set_footer(text=author_id, icon_url=pfp)
         embed.set_thumbnail(url=target_avatar)
+        if funny == True:
+            if next_level >= 15:
+                embed.set_image(url="https://media.discordapp.net/attachments/666826461956669450/1133990279611949096/NOLIFEsaturn.png")
+            else:
+                embed.set_image(url="https://media.discordapp.net/attachments/666826461956669450/1134003251608567839/waytogotii.png")
         await ctx.reply(embed=embed)
 
 async def setup(bot):

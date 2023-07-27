@@ -79,3 +79,42 @@ def add_xp(xp_amount: int, user_id: int):
     )
     conn.commit()
 
+#Adds credits
+def add_credits(credit_amount: int, user_id: int):
+    #Get their credit amount first
+    cur.execute(
+        "SELECT credits FROM users WHERE user_id = ?", (user_id,)
+    )
+    current_credits = cur.fetchone()
+    current_credits = int(current_credits[0])
+    
+    added_amount = current_credits + credit_amount
+    cur.execute(
+        "UPDATE users SET credits = ? WHERE user_id = ?", (added_amount, user_id,)
+    )
+    conn.commit()
+
+#Removes credits
+def remove_credits(credit_amount: int, user_id: int):
+    #Get their credit amount first
+    cur.execute(
+        "SELECT credits FROM users WHERE user_id = ?", (user_id,)
+    )
+    current_credits = cur.fetchone()
+    current_credits = int(current_credits[0])       #Fuck truples
+
+    removed_amount = current_credits - credit_amount
+    
+    #aaaaand its gone
+    cur.execute(
+        "UPDATE users SET credits = ? WHERE user_id = ?", (removed_amount, user_id)
+    )
+    conn.commit
+
+#Sets a user's credits to an amount
+#This will exist for moderation purposes.
+def set_credits(credit_amount: int, user_id: int):
+    cur.execute(
+        "UPDATE users SET credits = ? WHERE user_id = ?", (credit_amount, user_id,)
+    )
+    conn.commit()
