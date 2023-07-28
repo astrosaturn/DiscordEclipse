@@ -14,7 +14,7 @@ class Levels(commands.Cog):
         self.last_member = None
     
     @commands.Cog.listener()
-    async def on_ready(self):
+    async def on_ready():
         print("Levels cog ready.")
 
         
@@ -36,7 +36,7 @@ class Levels(commands.Cog):
         else:
             member_xp = get_user_xp(user_id=member_id)
             member_level = get_user_level(user_id=member_id)
-            
+            member_level = int(member_level[0])
             
             xp_amount = randint(3, 10)      # Pick a random value
             xp_to_give = member_xp + xp_amount      # Add together
@@ -74,6 +74,7 @@ class Levels(commands.Cog):
             target_level = get_user_level(user_id=target_id)
         else:
             target_level = get_user_level(user_id=target_id)
+        target_level = int(target_level[0])
 
         #1 in 20 change to include @snowytaiyaki's art
         funny = False
@@ -99,7 +100,10 @@ class Levels(commands.Cog):
             colour=0x9230FF,
             timestamp=datetime.now()
         )
-        embed.add_field(name=f"Level: {target_level}", value=f"XP: {target_xp}\n {xp_left} XP left until level {next_level}!")
+        embed.add_field(name=f"Level: {target_level}", value=f"XP: {target_xp}\n {xp_left} XP left until level {next_level}!",inline=False)
+        
+        target_credits = get_credits(user_id=target_id)
+        embed.add_field(name=f"Credits: {target_credits}",value=" ", inline=False)
         author = ctx.message.author
         pfp = author.avatar
         embed.set_footer(text=target_id, icon_url=pfp)

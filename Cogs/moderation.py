@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 from profilemanager import *
+from discord import app_commands
+
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -8,7 +10,7 @@ class Moderation(commands.Cog):
         self.last_member = None
     
     @commands.Cog.listener()
-    async def on_ready(self):
+    async def on_ready():
         print("Moderation cog ready.")
 
     #Purge command
@@ -85,7 +87,29 @@ class Moderation(commands.Cog):
         else:
             await ctx.reply(f"You do not have permission to do that!") 
 
+    #Sets a user's XP
+    @commands.command()
+    async def setxp(self, ctx:commands.Context, user:discord.User, xp_toset: int):
+        user_id = user.id
+        if ctx.author.guild_permissions.manage_roles:
+            if user is not None:
+                if xp_toset is not None:
+                    set_user_xp(xp_amount=xp_toset, user_id=user_id)
+                    await ctx.reply(f"<@{user_id}>'s XP has been set to {xp_toset}")
+                else:
+                    await ctx.reply(f"You must enter an XP value!")
+            else:
+                await ctx.reply(f"You must input a valid user!")
+        else:
+            await ctx.reply(f"You do not have permission to do that.")
+
     
+
+    
+
+    @app_commands.command(name="test")
+    async def test(self, interaction: discord.Interaction):
+        await interaction.response.send_message("Test successful.")
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))

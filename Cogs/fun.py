@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import random
 from profilemanager import *
+from discord import app_commands
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -9,7 +10,7 @@ class Fun(commands.Cog):
         self.last_member = None
     
     @commands.Cog.listener()
-    async def on_ready(self):
+    async def on_ready():
         print("Fun cog ready.")
 
 #TODO: make these games linked with XP and a currency system
@@ -41,7 +42,8 @@ class Fun(commands.Cog):
             await ctx.reply(f"You win! I chose `{bot_choice}` and you chose `{user_choice}`! You have been given 15 XP for winning!")
         
         else:
-            await ctx.reply(f"You lose! I chose `{bot_choice}` and you chose `{user_choice}`!")
+            await ctx.reply(f"{outcome} I chose `{bot_choice}` and you chose `{user_choice}`!")
+
 
 
     
