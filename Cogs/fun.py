@@ -3,6 +3,7 @@ from discord.ext import commands
 import random
 from profilemanager import *
 from discord import app_commands
+from datetime import datetime
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -44,7 +45,11 @@ class Fun(commands.Cog):
         else:
             await ctx.reply(f"{outcome} I chose `{bot_choice}` and you chose `{user_choice}`!")
 
-
+    @commands.command()
+    async def timestamp(self, ctx):
+        dt_object = datetime.now()
+        unix_ts = int(dt_object.timestamp())
+        await ctx.reply(f"<t:{unix_ts}>")
 
     
 

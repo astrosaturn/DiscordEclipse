@@ -4,6 +4,7 @@ import mariadb
 import math
 import time
 import os 
+from datetime import datetime, timedelta
 
 # Connect to MariaDB Platform
 try:
@@ -22,7 +23,7 @@ cur = conn.cursor()
 #Insert a user into the database
 def initiate_user(user_id: int):
     cur.execute(
-        "INSERT INTO users (user_id, level, current_xp, credits) VALUES (?, 1, 0, 0)", (user_id,))
+        "INSERT INTO users (user_id, level, current_xp, credits) VALUES (?, 1, 0, 0, 0)", (user_id,))
     conn.commit()
 
 #Get a user's current XP
@@ -159,3 +160,24 @@ def get_credits(user_id: int):
     cur_cred = cur.fetchone()
     cur_cred = int(cur_cred[0])     #Fuck truples
     return cur_cred
+
+#Create a day long cooldown
+def init_cooldown(user_id: int):
+    cooldown = int(datetime.now().timestamp()) + 86400
+    cur.execute(
+        "UPDATE users SET daily_cooldown = ? WHERE user_id = ?", (cooldown, user_id)
+    )
+    conn.commit()
+
+#Check if the cooldown has passed
+def cooldown_complete(user_id: int):
+    cur.execute(
+        "SELECT daily_cooldown FROM users WHERE user_id = ?", (user_id,)
+    )
+    cooldown = cur.fetchone()
+    cooldown = int(cooldown[0])
+
+    if int(datetime.now().timestamp()) > cooldown:
+        return True
+    else:
+        return False
