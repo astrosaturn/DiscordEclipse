@@ -45,7 +45,6 @@ def check_db_for_user(user_id: int):
             "SELECT user_id FROM users WHERE user_id=?", (user_id,)            
     )
     userid = cur.fetchone()
-    print(user_id)
     if userid is not None:
         userid = int(userid[0])
         return userid

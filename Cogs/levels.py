@@ -6,6 +6,7 @@ import math
 from profilemanager import *
 from datetime import datetime
 import time
+from discord import app_commands
 
 
 class Levels(commands.Cog):
@@ -53,16 +54,15 @@ class Levels(commands.Cog):
                 set_user_xp(xp_amount=0, user_id=member_id)       # Reset their XP back to 0
                 await message.channel.send(f"<@{message.author.id}>, you have leveled up to level {member_new_level}!")   
                 return            
-
-
-    @commands.command()
-    async def level(self, ctx, *, target: discord.Member = None):
+    
+    @app_commands.command(name="profile", description="Shows you a user's profile.")
+    async def profile(self, interaction: discord.Interaction, target: discord.Member = None):
         #If you dont choose someone to inspect, 
         #It picks you.
         if target == None:
-            target_id = ctx.author.id
-            target_name = ctx.author.name
-            target_avatar = ctx.author.avatar
+            target_id = interaction.user.id
+            target_name = interaction.user.name
+            target_avatar = interaction.user.avatar
         else:
             target_id = target.id
             target_name = target.name
@@ -104,8 +104,8 @@ class Levels(commands.Cog):
         
         target_credits = get_credits(user_id=target_id)
         embed.add_field(name=f"Credits: {target_credits}",value=" ", inline=False)
-        author = ctx.message.author
-        pfp = author.avatar
+        author = interaction.user.id
+        pfp = interaction.user.avatar
         embed.set_footer(text=target_id, icon_url=pfp)
         embed.set_thumbnail(url=target_avatar)
         if funny == True:
@@ -113,7 +113,7 @@ class Levels(commands.Cog):
                 embed.set_image(url="https://media.discordapp.net/attachments/666826461956669450/1133990279611949096/NOLIFEsaturn.png")
             else:
                 embed.set_image(url="https://media.discordapp.net/attachments/666826461956669450/1134003251608567839/waytogotii.png")
-        await ctx.reply(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Levels(bot))

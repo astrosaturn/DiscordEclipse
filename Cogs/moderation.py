@@ -14,62 +14,63 @@ class Moderation(commands.Cog):
         print("Moderation cog ready.")
 
     #Purge command
-    @commands.command()
-    async def purge(self, ctx: commands.Context, *, number:int = None):
-        if ctx.message.author.guild_permissions.manage_messages:
+    @app_commands.command(name="purge", description="Removes x amount of messages")
+    async def purge(self, interaction: discord.Interaction, amount:int = None):
+        if interaction.user.guild_permissions.manage_messages:
             try:
-                if number is None:
-                    await ctx.reply('You must input a number!', mention_author=False)
+                if amount is None:
+                    await interaction.response.send_message('You must input a number!', ephemeral=True)
                 else:
-                    deleted = await ctx.message.channel.purge(limit = number + 1)
-                    await ctx.channel.send(f'Messages purged by {ctx.message.author.mention}: `{len(deleted) - 1}`')
-            except:
-                await ctx.reply("I can't purge messages here.", mention_author=False)
+                    deleted = amount
+                    await interaction.channel.purge(limit = amount)
+                    await interaction.channel.send(f'Messages purged by {interaction.user.mention}: `{deleted}`')
+            except Exception as e:
+                await interaction.response.send_message(f"I can't purge messages here: {e}", ephemeral=True)
         else:
-            await ctx.reply('You do not have permission to use this command.', mention_author=False)
+            await interaction.response.send_message('You do not have permission to use this command.')
 
     #Kick command
-    @commands.command()
-    async def kick(self, ctx:commands.Context, user:discord.Member,*,reason=None):
-        if ctx.author.guild_permissions.kick_members:
+    @app_commands.command(name="kick", description="Kicks a user.")
+    async def kick(self, interaction: discord.Interaction, user:discord.Member,*,reason: str = None):
+        if interaction.user.guild_permissions.kick_members:
             if user is not None:
                 await user.kick(reason=reason)
-                await ctx.reply(f'{user} has been kicked for the reason: `{reason}`')
+                await interaction.response.send_message(f'{user} has been kicked for the reason: `{reason}`')
             else:
-                await ctx.reply(f"{ctx.message.author}, you must select a valid user!")
+                await interaction.response.send_message(f"{interaction.user.mention}, you must select a valid user!", ephemeral=True)
         else:
-            await ctx.reply(f"You do not have permissions to use this command.")
+            await interaction.response.send_message(f"You do not have permissions to use this command.", ephemeral=True)
     
     #Ban command
-    @commands.command()
-    async def ban(self, ctx:commands.Context, user:discord.Member,*,reason=None):
-        if ctx.author.guild_permissions.ban_members:
+    @app_commands.command(name="ban", description="Bans a selected user.")
+    async def ban(self, interaction: discord.Interaction, user:discord.Member,*,reason:str = None):
+        if interaction.user.guild_permissions.ban_members:
             if user is not None:
                 await user.ban(reason=reason)
-                await ctx.reply(f'{user} has been banned for the reason: `{reason}`')
+                await interaction.response.send_message(f'{user} has been banned for the reason: `{reason}`')
             else:
-                await ctx.reply(f"{ctx.message.author}, you must select a valid user!")
+                await interaction.response.send_message(f"{interaction.user.mention}, you must select a valid user!", ephemeral=True)
         else:
-            await ctx.reply(f"You do not have permissions to use this command.")
+            await interaction.response.send_message(f"You do not have permissions to use this command.", ephemeral=True)
 
     #Slowmode command
-    @commands.command()
-    async def slowmode(self, ctx:commands.Context, *, time: int):
-        channel = ctx.channel
-        if ctx.author.guild_permissions.manage_channels:
+    @app_commands.command(name="slowmode", description="Sets the current channel to slowmode for x seconds")
+    async def slowmode(self, interaction: discord.Interaction, *, time: int,):
+        channel = interaction.channel
+        if interaction.user.guild_permissions.manage_channels:
             if time is not None:
                 if time > 21600:
-                    await ctx.reply("You can not input a time over 6 hours/21600 seconds!")
+                    interaction.response.send_message("You can not input a time over 6 hours/21600 seconds!", ephemeral=True)
                 else:
                     await channel.edit(slowmode_delay=time)
                     if time > 0:
-                        await ctx.reply(f"Slowmode in <#{ctx.channel.id}> has been set to `{time}` seconds.")
+                        await interaction.response.send_message(f"Slowmode in <#{channel.id}> has been set to `{time}` seconds.", ephemeral=True)
                     else:
-                        await ctx.reply(f"Slowmode in <#{ctx.channel.id}> has been removed.")
+                        await interaction.response.send_message(f"Slowmode in <#{channel.id}> has been removed.")
             else:
-                await ctx.reply("You must input a time in seconds.")
+                await interaction.response.send_message("You must input a time in seconds.", ephemeral=True)
         else:
-            await ctx.reply("You do not have permission to use this command!")
+            await interaction.response.send_message("You do not have permission to use this command!", ephemeral=True)
     
     #Set a user's level
     @commands.command()
@@ -103,13 +104,6 @@ class Moderation(commands.Cog):
         else:
             await ctx.reply(f"You do not have permission to do that.")
 
-    
-
-    
-
-    @app_commands.command(name="test")
-    async def test(self, interaction: discord.Interaction):
-        await interaction.response.send_message("Test successful.")
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))
