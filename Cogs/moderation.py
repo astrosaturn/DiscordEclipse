@@ -112,10 +112,27 @@ class Moderation(commands.Cog):
         else:
             await interaction.response.send_message(f"You must enter a user!")
          
-
     #Removes a user's credits
-
+    @commands.is_owner()
+    @app_commands.command(name="removecredits", description="Removes a users credits")
+    async def removecredits(self, interaction: discord.Interaction, user:discord.User, amount: int):
+        user_id = user.id 
+        if user is not None:
+            remove_credits(amount, user_id)
+            await interaction.response.send_message(f"{amount} credits have been removed from <@{user_id}>.")
+        else:
+            await interaction.response.send_message(f"You must enter a user.")
+    
     #Adds credit's to a user
+    @commands.is_owner()
+    @app_commands.command(name="addcredits", description="Adds credits to a user")
+    async def addcredits(self, interaction: discord.Interaction, user:discord.User, amount: int):
+        user_id = user.id
+        if user is not None:
+            add_credits(amount, user_id)
+            await interaction.response.send_message(f"{amount} credits have been added to <@{user_id}>.")
+        else:
+            await interaction.response.send_message(f"You must enter a user.")
 
 
 async def setup(bot):
