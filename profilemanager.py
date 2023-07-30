@@ -181,3 +181,12 @@ def cooldown_complete(user_id: int):
         return True
     else:
         return False
+    
+#Shows the leaderboard
+def get_leaderboard():
+    cur.execute(
+        "SELECT user_id, level, credits FROM users ORDER BY credits DESC, level DESC LIMIT 10"
+    )
+    results = cur.fetchall()
+    return results
+    

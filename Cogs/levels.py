@@ -114,6 +114,20 @@ class Levels(commands.Cog):
             else:
                 embed.set_image(url="https://media.discordapp.net/attachments/666826461956669450/1134003251608567839/waytogotii.png")
         await interaction.response.send_message(embed=embed)
+    
+    @app_commands.command(name="leaderboard", description="Shows the top 10 users in order of most credits!")
+    async def leaderboard(self, interaction: discord.Interaction):            
+            ldb = get_leaderboard()
+            embed = discord.Embed(
+                title="Eclipse Leaderboard:",
+                colour=0xc45241,
+                timestamp=datetime.now()
+            )
+            for i, pos in enumerate(ldb, start=1):
+                userid, level, credits = pos
+                embed.add_field(name=" ", value=f"{i}. <@{userid}>: Level `{level}` | `{credits}` credits", inline=False)
+            embed.set_footer(icon_url=interaction.user.avatar)
+            await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Levels(bot))
