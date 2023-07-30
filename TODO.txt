@@ -1,3 +1,2 @@
-- Make slash commands
 - Finish currency system
 - Add more games
