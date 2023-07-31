@@ -71,7 +71,7 @@ class Currency(commands.Cog):
             if target.id == interaction.user.id:
                 await interaction.response.send_message("You can't steal from yourself, moron.")
             else:
-                if int(datetime.now().timestamp()) > get_theft_cooldown(target.id):
+                if int(datetime.now().timestamp()) >= get_theft_cooldown(target.id):
                     cooldown = int(datetime.now().timestamp()) + 3600
                     
                     embed = discord.Embed(
