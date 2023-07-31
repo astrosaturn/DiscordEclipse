@@ -23,7 +23,7 @@ cur = conn.cursor()
 #Insert a user into the database
 def initiate_user(user_id: int):
     cur.execute(
-        "INSERT INTO users (user_id, level, current_xp, credits) VALUES (?, 1, 0, 0, 0)", (user_id,))
+        "INSERT INTO users (user_id, level, current_xp, credits, daily_cooldown) VALUES (?, 1, 0, 0, 0)", (user_id,))
     conn.commit()
 
 #Get a user's current XP
@@ -173,14 +173,24 @@ def init_cooldown(user_id: int):
 def cooldown_complete(user_id: int):
     cur.execute(
         "SELECT daily_cooldown FROM users WHERE user_id = ?", (user_id,)
-    )
+    )        
     cooldown = cur.fetchone()
+    if cooldown == None:
+        init_cooldown(user_id)
     cooldown = int(cooldown[0])
 
     if int(datetime.now().timestamp()) > cooldown:
         return True
     else:
         return False
+    
+def cooldown_left(user_id: int):
+    cur.execute(
+        "SELECT daily_cooldown FROM users WHERE user_id = ?", (user_id,)
+    )
+    cd_left = cur.fetchone()
+    cd_left = int(cd_left[0])
+    return cd_left
     
 #Shows the leaderboard
 def get_leaderboard():

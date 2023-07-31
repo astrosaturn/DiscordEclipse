@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord import app_commands
 from profilemanager import *
 from datetime import datetime
+from random import randint
+import math
 
 class Currency(commands.Cog):
     def __init__(self, bot):
@@ -47,13 +49,42 @@ class Currency(commands.Cog):
                 timestamp=datetime.now()
             )
             embed.add_field(name=f"{interaction.user.name}, 1000 Credits have been added to your account!", 
-                            value=f"Your next Daily will be available on <t:{int(datetime.now().timestamp()) + 86400}>.",
+                            value=f"Your next Daily will be available on <t:{cooldown_left(interaction.user.id)}>.",
                             inline=False
                             )
             await interaction.response.send_message(embed=embed)
         else:
-            await interaction.response.send_message(f"Your next daily will be available <t:{int(datetime.now().timestamp()) + 86400}:R>")
+            await interaction.response.send_message(f"Your next daily will be available <t:{cooldown_left(interaction.user.id)}:R>")
 
-    
+    @app_commands.command(name="steal", description="Attempt to steal credits from your target")
+    async def steal(self, interaction: discord.Interaction, target: discord.User):
+        if target is not None:
+            
+            target_balance = get_credits(target.id)
+            author_balance = get_credits(interaction.user.id)
+
+            #Calculate this here because it will be used regardless
+            #of if the user wins or loses the steal
+            theft_amount = target_balance / 4
+            theft_amount = math.trunc(theft_amount)
+
+            if theft_amount < 1:
+                await interaction.response.send_message(f"{target.mention} has insufficent credits to steal!", ephemeral=True)
+            else:
+                chance = randint(1, 3)
+                if chance > 1:      #66% chance to steal, this may need to be adjusted.
+                    add_credits(theft_amount, interaction.user.id)
+                    remove_credits(theft_amount, target.id)
+                    await interaction.response.send_message(f"{interaction.user.mention} successfully stole {theft_amount} credits from {target.mention}!")
+                    
+                else:       #33% to fail and lose your balance instead LOL!
+                    if author_balance < theft_amount:
+                        set_credits(0, interaction.user.id)
+                        await interaction.response.send_message(f"{interaction.user.mention} failed to steal from {target.mention} and lost all of their credits!")
+                    else:
+                        remove_credits(theft_amount, interaction.user.id)
+                        await interaction.response.send_message(f"{interaction.user.mention} failed to steal from {target.mention} and lost {theft_amount} credits!")
+
+
 async def setup(bot):
     await bot.add_cog(Currency(bot))
