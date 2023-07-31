@@ -23,7 +23,7 @@ cur = conn.cursor()
 #Insert a user into the database
 def initiate_user(user_id: int):
     cur.execute(
-        "INSERT INTO users (user_id, level, current_xp, credits, daily_cooldown) VALUES (?, 1, 0, 0, 0)", (user_id,))
+        "INSERT INTO users (user_id, level, current_xp, credits, daily_cooldown, theft_cooldown) VALUES (?, 1, 0, 0, 0, 0)", (user_id,))
     conn.commit()
 
 #Get a user's current XP
@@ -199,4 +199,19 @@ def get_leaderboard():
     )
     results = cur.fetchall()
     return results
-    
+
+#Get the theft cooldown on a user
+def get_theft_cooldown(user_id: int):
+    cur.execute(
+        "SELECT theft_cooldown FROM users WHERE user_id = ?", (user_id,)
+    )
+    cooldown = cur.fetchone()
+    cooldown = int(cooldown[0])
+    return cooldown
+
+#Set the theft cooldown on a user
+def set_theft_cooldown(amount: int, user_id: int):
+    cur.execute(
+        "UPDATE users SET theft_cooldown = ? WHERE user_id = ?", (amount, user_id,)
+    )
+    conn.commit()

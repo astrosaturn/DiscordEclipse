@@ -67,31 +67,42 @@ class Currency(commands.Cog):
             #of if the user wins or loses the steal
             theft_amount = target_balance / 4
             theft_amount = math.trunc(theft_amount)
-
-            embed = discord.Embed(
-                title=f"{interaction.user.name} attemps to steal from {target.name}..",
-                colour=0xfc0f03,
-                timestamp=datetime.now()
-            )
-
-            if theft_amount < 1:
-                embed.add_field(f"{target.name} has insufficent credits to steal!")
+            
+            if target.id == interaction.user.id:
+                await interaction.response.send_message("You can't steal from yourself, moron.")
             else:
-                chance = randint(1, 3)
-                if chance > 1:      #66% chance to steal, this may need to be adjusted.
-                    add_credits(theft_amount, interaction.user.id)
-                    remove_credits(theft_amount, target.id)
+                if int(datetime.now().timestamp()) > get_theft_cooldown(target.id):
+                    cooldown = int(datetime.now().timestamp()) + 3600
                     
-                    embed.add_field(name="..and succeeds!", value=f"{interaction.user.mention} successfully stole {theft_amount} credits from {target.mention}!")
-                    
-                else:       #33% to fail and lose your balance instead LOL!
-                    if author_balance < theft_amount:
-                        set_credits(0, interaction.user.id)                        
-                        embed.add_field(name="..and fails miserably!", value=f"{interaction.user.mention} failed to steal from {target.mention} and lost all of their credits!")
+                    embed = discord.Embed(
+                        title=f"{interaction.user.name} attemps to steal from {target.name}..",
+                        colour=0xfc0f03,
+                        timestamp=datetime.now()
+                    )
+
+                    if theft_amount < 1:
+                        embed.add_field(name=f"... and finds nothing?", value=f"{target.name} has insufficent credits to steal!")
                     else:
-                        remove_credits(theft_amount, interaction.user.id)
-                        embed.add_field(name="...and fails!", value=f"{interaction.user.mention} failed to steal from {target.mention} and lost {theft_amount} credits!")
-            await interaction.response.send_message(embed=embed)
+                        chance = randint(1, 3)
+                        if chance > 1:      #66% chance to steal, this may need to be adjusted.
+                            add_credits(theft_amount, interaction.user.id)
+                            remove_credits(theft_amount, target.id)
+                            set_theft_cooldown(cooldown, target.id)
+                            embed.add_field(name="..and succeeds!", value=f"{interaction.user.mention} successfully stole {theft_amount} credits from {target.mention}!")
+                            
+                        else:       #33% to fail and lose your balance instead LOL!
+                            if author_balance < theft_amount:
+                                set_credits(0, interaction.user.id)                        
+                                set_theft_cooldown(cooldown, target.id)
+                                embed.add_field(name="..and fails miserably!", value=f"{interaction.user.mention} failed to steal from {target.mention} and lost all of their credits!")
+                            else:
+                                remove_credits(theft_amount, interaction.user.id)
+                                set_theft_cooldown(cooldown, target.id)
+                                embed.add_field(name="...and fails!", value=f"{interaction.user.mention} failed to steal from {target.mention} and lost {theft_amount} credits!")
+                    await interaction.response.send_message(embed=embed)
+                else:
+                    cooldown_remaining = get_theft_cooldown(target.id)
+                    await interaction.response.send_message(f"{interaction.user.mention}, you must wait <t:{cooldown_remaining}:R> before stealing from {target.mention} again!")
 
 async def setup(bot):
     await bot.add_cog(Currency(bot))

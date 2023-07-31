@@ -76,64 +76,77 @@ class Moderation(commands.Cog):
     @commands.is_owner()
     @app_commands.command(name="setlevel", description="Sets the users current level.")
     async def setlevel(self, interaction: discord.Interaction, user:discord.User, level:int):
-        user = user.id        
-        if user is not None:
-            if level is not None:
-                level_set(level,user)
-                await interaction.response.send_message(f"<@{user}>'s level has been set to {level}")
+        if interaction.user.id == 345683515528183808:
+            user = user.id        
+            if user is not None:
+                if level is not None:
+                    level_set(level,user)
+                    await interaction.response.send_message(f"<@{user}>'s level has been set to {level}")
+                else:
+                    await interaction.response.send_message(f"You must input a valid level.")
             else:
-                await interaction.response.send_message(f"You must input a valid level.")
+                await interaction.response.send_message(f"You must input a valid user!")
         else:
-            await interaction.response.send_message(f"You must input a valid user!")
-        
+            await interaction.response.send_message(f"You do not have permission to use this command!")
 
     #Sets a user's XP
     @commands.is_owner()
     @app_commands.command(name="setxp", description="Sets the users current XP.")
     async def setxp(self, interaction: discord.Interaction, user:discord.User, xp_toset: int):
-        user_id = user.id
-        if user is not None:
-            if xp_toset is not None:
-                set_user_xp(xp_toset, user_id)
-                await interaction.response.send_message(f"<@{user_id}>'s XP has been set to {xp_toset}")
+        if interaction.user.id == 345683515528183808:
+            user_id = user.id
+            if user is not None:
+                if xp_toset is not None:
+                    set_user_xp(xp_toset, user_id)
+                    await interaction.response.send_message(f"<@{user_id}>'s XP has been set to {xp_toset}")
+                else:
+                    await interaction.response.send_message(f"You must enter an XP value!")
             else:
-                await interaction.response.send_message(f"You must enter an XP value!")
+                await interaction.response.send_message(f"You must input a valid user!")
         else:
-            await interaction.response.send_message(f"You must input a valid user!")
+            await interaction.response.send_message(f"You do not have permission to use this command!")
     
     #Set's a user's credits
     @commands.is_owner()
     @app_commands.command(name="setcredits", description="Sets the users current credit balance")
     async def setcredits(self, interaction: discord.Interaction, user:discord.User, amount: int):
-        user_id = user.id
-        if user is not None:
-            set_credits(amount,user_id)
-            await interaction.response.send_message(f"<@{user_id}>'s Credits have been set to {amount}")
+        if interaction.user.id == 345683515528183808:
+            user_id = user.id
+            if user is not None:
+                set_credits(amount,user_id)
+                await interaction.response.send_message(f"<@{user_id}>'s Credits have been set to {amount}")
+            else:
+                await interaction.response.send_message(f"You must enter a user!")
         else:
-            await interaction.response.send_message(f"You must enter a user!")
-         
+            await interaction.response.send_message(f"You do not have permission to use this command!")     
+    
     #Removes a user's credits
     @commands.is_owner()
     @app_commands.command(name="removecredits", description="Removes a users credits")
     async def removecredits(self, interaction: discord.Interaction, user:discord.User, amount: int):
-        user_id = user.id 
-        if user is not None:
-            remove_credits(amount, user_id)
-            await interaction.response.send_message(f"{amount} credits have been removed from <@{user_id}>.")
+        if interaction.user.id == 345683515528183808:
+            user_id = user.id 
+            if user is not None:
+                remove_credits(amount, user_id)
+                await interaction.response.send_message(f"{amount} credits have been removed from <@{user_id}>.")
+            else:
+                await interaction.response.send_message(f"You must enter a user.")
         else:
-            await interaction.response.send_message(f"You must enter a user.")
+            await interaction.response.send_message(f"You do not have permission to use this command!")    
     
     #Adds credit's to a user
     @commands.is_owner()
     @app_commands.command(name="addcredits", description="Adds credits to a user")
     async def addcredits(self, interaction: discord.Interaction, user:discord.User, amount: int):
-        user_id = user.id
-        if user is not None:
-            add_credits(amount, user_id)
-            await interaction.response.send_message(f"{amount} credits have been added to <@{user_id}>.")
+        if interaction.user.id == 345683515528183808:
+            user_id = user.id
+            if user is not None:
+                add_credits(amount, user_id)
+                await interaction.response.send_message(f"{amount} credits have been added to <@{user_id}>.")
+            else:
+                await interaction.response.send_message(f"You must enter a user.")
         else:
-            await interaction.response.send_message(f"You must enter a user.")
-
+            await interaction.response.send_message(f"You do not have permission to use this command!")        
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))
