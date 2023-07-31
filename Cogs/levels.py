@@ -52,7 +52,8 @@ class Levels(commands.Cog):
                 member_new_level = member_level + 1  
                 level_set(new_level=member_new_level, user_id=member_id)      # Level the user up
                 set_user_xp(xp_amount=0, user_id=member_id)       # Reset their XP back to 0
-                await message.channel.send(f"<@{message.author.id}>, you have leveled up to level {member_new_level}!")   
+                await message.add_reaction("🎉")        #Not as annoying as a message.
+                #await message.channel.send(f"<@{message.author.id}>, you have leveled up to level {member_new_level}!")   
                 return            
     
     @app_commands.command(name="profile", description="Shows you a user's profile.")
