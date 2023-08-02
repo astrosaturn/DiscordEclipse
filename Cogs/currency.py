@@ -104,5 +104,47 @@ class Currency(commands.Cog):
                     cooldown_remaining = get_theft_cooldown(target.id)
                     await interaction.response.send_message(f"{interaction.user.mention}, you must wait <t:{cooldown_remaining}:R> before stealing from {target.mention} again!")
 
+    @app_commands.command(name="gamble", description="Gamble a sum of your coins!")
+    async def gamble(self, interaction: discord.Interaction, amount: int):
+        user_balance = get_credits(interaction.user.id)
+        
+        #Some preliminary stupid-checks. Fuck you @frantictaco.
+        if user_balance == 0:
+            await interaction.response.send_message(f"{interaction.user.mention} you don't have any coins to gamble, numbnuts.")
+            return
+        else:
+            if amount <= 0:
+                await interaction.response.send_message(f"{interaction.user.mention}, you can't gamble nothing. Input a value higher than 0.")
+            else:
+                x = user_balance
+                y = randint(1,5)
+                i = randint(1,6)
+
+                z = (x * y) 
+                w = (x * i)
+
+                print(f"z = {z} w = {w}")
+                embed = discord.Embed(
+                    title=f"{interaction.user.name} makes a bet of {amount} credits.",
+                    colour=0x3492eb,
+                    timestamp=datetime.now()
+                )
+
+
+                if w > z:
+                    winnings = amount * 2
+                    add_credits(winnings, interaction.user.id)
+                    new_bal = get_credits(interaction.user.id)
+                    embed.add_field(name="And wins!", value=f"{interaction.user.mention} has won `{winnings}` credits.\n Their balance is now `{new_bal}`.")
+                else:
+                    remove_credits(amount, interaction.user.id)
+                    new_bal = get_credits(interaction.user.id)
+                    embed.add_field(name="And loses.", value=f"{interaction.user.mention} has lost `{amount}` credits.\n Their new balance is `{new_bal}`.")
+                
+                await interaction.response.send_message(embed=embed)
+
+
+
+
 async def setup(bot):
     await bot.add_cog(Currency(bot))
