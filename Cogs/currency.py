@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from profilemanager import *
+from databasemanager import *
 from datetime import datetime
 from random import randint
 import math

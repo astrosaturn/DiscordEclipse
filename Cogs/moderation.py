@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from profilemanager import *
+from databasemanager import *
 from discord import app_commands
 
 
@@ -146,7 +146,18 @@ class Moderation(commands.Cog):
             else:
                 await interaction.response.send_message(f"You must enter a user.")
         else:
-            await interaction.response.send_message(f"You do not have permission to use this command!")        
+            await interaction.response.send_message(f"You do not have permission to use this command!") 
+
+    @commands.command()
+    async def setlogchannel(self, ctx, channel:commands.TextChannelConverter):
+        if ctx.author.guild_permissions.manage_channels:
+            
+            guild_id = ctx.guild.id
+            
+
+            set_log_channel(channel.id, guild_id)
+            await ctx.reply(f"The log channel has been set to <#{channel.id}>! in guild id `{guild_id}`!")
+
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))

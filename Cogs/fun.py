@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import random
-from profilemanager import *
+from databasemanager import *
 from discord import app_commands
 from datetime import datetime
 

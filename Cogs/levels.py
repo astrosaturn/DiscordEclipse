@@ -3,7 +3,7 @@ from discord.ext import commands
 import random 
 from random import *
 import math
-from profilemanager import *
+from databasemanager import *
 from datetime import datetime
 import time
 from discord import app_commands
