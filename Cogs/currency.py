@@ -15,8 +15,8 @@ class Currency(commands.Cog):
     async def on_ready():
         print("Currency cog ready.")
 
-    @app_commands.command(name="givecredits", description="Transfer some of your credits to someone else")
-    async def givecredits(self, interaction: discord.Interaction, target: discord.User, amount: int):        
+    @app_commands.command(name="transfer", description="Transfer some of your credits to someone else")
+    async def trasnfer(self, interaction: discord.Interaction, target: discord.User, amount: int):        
         author_balance = get_credits(interaction.user.id)
 
         if author_balance >= amount:
@@ -142,6 +142,8 @@ class Currency(commands.Cog):
                     embed.add_field(name="And loses.", value=f"{interaction.user.mention} has lost `{amount}` credits.\n Their new balance is `{new_bal}`.")
                 
                 await interaction.response.send_message(embed=embed)
+
+
 
 
 
