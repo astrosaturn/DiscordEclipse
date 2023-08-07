@@ -20,7 +20,9 @@ class Logging(commands.Cog):
     async def on_message_delete(self, message):
         #Get the log channel.
         log_channel = get_log_channel(message.guild.id)
-        await message.channel.send(message.content)
+        channel = self.bot.get_channel(log_channel)
+        if channel:
+            await channel.send(f"<@{message.author.id}> deleted a message:\n `{message.content}`")
         
 
 

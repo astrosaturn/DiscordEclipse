@@ -148,8 +148,6 @@ class Moderation(commands.Cog):
         if ctx.author.guild_permissions.manage_channels:
             
             guild_id = ctx.guild.id
-            
-
             set_log_channel(channel.id, guild_id)
             await ctx.reply(f"The log channel has been set to <#{channel.id}>! in guild id `{guild_id}`!")
         else:

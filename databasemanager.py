@@ -227,20 +227,29 @@ def init_guild(guild_id: int):
         "INSERT INTO guilds (guild_id, log_chan_id) VALUES (?, 0)", (guild_id,)
     )
     conn.commit()
-        
+
+#Check to see if a guild has been init into the database
+def check_db_for_guild(guild_id: int):
+    cur.execute(
+        "SELECT guild_id FROM guilds WHERE guild_id = ?", (guild_id,)
+    )
+    guildid = cur.fetchone()
+    if guildid is not None:
+        guildid = int(guildid[0])
+        return guildid
+    else:
+        return None
+
 
 
 #Set a guild's log channel
 def set_log_channel(channel_id: int, guild_id: int):
-    #See if the guild is in the db first.
-    cur.execute(
-        "SELECT guild_id = ? FROM guilds", (guild_id,)
-    )
-    gid = cur.fetchall()
-    #If it isn't, it should be!
-    if gid == None:
-        init_guild(guild_id)
-        
+    #Check the DB for the guild
+    querey_guild = check_db_for_guild(guild_id)
+    #If it isnt in the DB, it should be!
+    if querey_guild is None:
+        init_guild(guild_id)   
+    
     cur.execute(
         "UPDATE guilds SET log_chan_id = ? WHERE guild_id = ?", (channel_id, guild_id,)
     )
@@ -254,6 +263,6 @@ def get_log_channel(guild_id: int):
         "SELECT log_chan_id FROM guilds WHERE guild_id = ?", (guild_id,)
     )
     id = cur.fetchall()
-    id = int(id[0])
-
+    id = ''.join(map(str,id[0]))
+    id = int(id)
     return id 
