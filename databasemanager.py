@@ -263,6 +263,6 @@ def get_log_channel(guild_id: int):
         "SELECT log_chan_id FROM guilds WHERE guild_id = ?", (guild_id,)
     )
     id = cur.fetchall()
-    id = ''.join(map(str,id[0]))
+    id = ''.join(map(str,id[0]))        #WHAT THE FUCK DOES THIS EVEN MEAN??
     id = int(id)
     return id 
