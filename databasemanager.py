@@ -224,7 +224,7 @@ def set_theft_cooldown(amount: int, user_id: int):
 #Initiate a guild into the DB
 def init_guild(guild_id: int):
     cur.execute(
-        "INSERT INTO guilds (guild_id, log_chan_id) VALUES (?, 0)", (guild_id,)
+        "INSERT INTO guilds (guild_id, log_chan_id, scrape_chan_id) VALUES (?, 0, 0)", (guild_id,)
     )
     conn.commit()
 
@@ -256,7 +256,6 @@ def set_log_channel(channel_id: int, guild_id: int):
     conn.commit()
     
     
-
 #Get the guild's log channel
 def get_log_channel(guild_id: int):
     cur.execute(
@@ -266,3 +265,26 @@ def get_log_channel(guild_id: int):
     id = ''.join(map(str,id[0]))        #WHAT THE FUCK DOES THIS EVEN MEAN??
     id = int(id)
     return id 
+
+#Set the scraper channel
+def set_scrape_chan_id(channel_id:int, guild_id:int):
+    #Check DB for the guild
+    querey_guild = check_db_for_guild(guild_id)
+    #If it isnt there, it should be!
+    if querey_guild is None:
+        init_guild(guild_id)
+    
+    cur.execute(
+        "UPDATE guilds SET scrape_chan_id = ? WHERE guild_id = ?", (channel_id, guild_id,)
+    )
+    conn.commit()
+
+#Get the scraper channel ID
+def get_scrape_channel_id(guild_id: int):
+    cur.execute(
+        "SELECT scrape_chan_id FROM guilds WHERE guild_id = ?", (guild_id,)
+    )
+    id = cur.fetchall()
+    id = ''.join(map(str,id[0]))
+    id = int(id)
+    return id
