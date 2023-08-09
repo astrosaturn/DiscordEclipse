@@ -57,15 +57,36 @@ class Moderation(commands.Cog):
     @app_commands.command(name="slowmode", description="Sets the current channel to slowmode for x seconds")
     async def slowmode(self, interaction: discord.Interaction, *, time: int,):
         channel = interaction.channel
+        log_channel = get_log_channel(interaction.guild.id)
         if interaction.user.guild_permissions.manage_channels:
             if time is not None:
                 if time > 21600:
                     interaction.response.send_message("You can not input a time over 6 hours/21600 seconds!", ephemeral=True)
                 else:
                     await channel.edit(slowmode_delay=time)
-                    if time > 0:
+                    if time > 0:                        
+                        #Send a log
+                        if log_channel:     #But only if the channel has been defined!
+                            log_embed = discord.Embed(
+                                title="Slowmode has been set.",
+                                colour=0xed5f5a,
+                                timestamp=datetime.now()
+                            )
+                            log_embed.add_field(name=f"Moderator: {interaction.user.name}", value=f"Channel: <#{channel.id}>\nDuration: `{time}` seconds")
+                            log_channel = self.bot.get_channel(log_channel)
+                            await log_channel.send(embed=log_embed)
+
                         await interaction.response.send_message(f"Slowmode in <#{channel.id}> has been set to `{time}` seconds.", ephemeral=True)
                     else:
+                        if log_channel: 
+                            log_embed = discord.Embed(
+                                title="Slowmode was removed",
+                                colour=0xed5f5a,
+                                timestamp=datetime.now()
+                            )
+                            log_embed.add_field(name=f"Moderator: {interaction.user.name}", value=f"Channel: <#{channel.id}>\nSlowmode removed")
+                            log_channel = self.bot.get_channel(log_channel)
+                            await log_channel.send(embed=log_embed)
                         await interaction.response.send_message(f"Slowmode in <#{channel.id}> has been removed.")
             else:
                 await interaction.response.send_message("You must input a time in seconds.", ephemeral=True)
@@ -143,6 +164,8 @@ class Moderation(commands.Cog):
         else:
             await ctx.reply(f"You do not have permission to use this command!")        
 
+
+    #Sets the channel to send logs to in the database
     @commands.command()
     async def setlogchannel(self, ctx, channel:commands.TextChannelConverter):
         if ctx.author.guild_permissions.manage_channels:
