@@ -224,7 +224,7 @@ def set_theft_cooldown(amount: int, user_id: int):
 #Initiate a guild into the DB
 def init_guild(guild_id: int):
     cur.execute(
-        "INSERT INTO guilds (guild_id, log_chan_id, scrape_chan_id) VALUES (?, 0, 0)", (guild_id,)
+        "INSERT INTO guilds (guild_id, log_chan_id, scrape_chan_id, scraper_wh_id) VALUES (?, 0, 0, 0)", (guild_id,)
     )
     conn.commit()
 
@@ -283,6 +283,24 @@ def set_scrape_chan_id(channel_id:int, guild_id:int):
 def get_scrape_channel_id(guild_id: int):
     cur.execute(
         "SELECT scrape_chan_id FROM guilds WHERE guild_id = ?", (guild_id,)
+    )
+    id = cur.fetchall()
+    id = ''.join(map(str,id[0]))
+    id = int(id)
+    return id
+
+#Set the webhook ID
+def set_webhook_id(webhook_id:int, guild_id:int):
+    cur.execute(
+        "UPDATE guilds SET scraper_wh_id = ? WHERE guild_id = ?", (webhook_id, guild_id,)
+    )
+    print(f"Scraper webhook id set to {webhook_id} in {guild_id}")
+    conn.commit()
+
+#Get the webhook ID
+def get_webhook_id(guild_id:int):
+    cur.execute(
+        "SELECT scraper_wh_id FROM guilds WHERE guild_id = ?", (guild_id,)
     )
     id = cur.fetchall()
     id = ''.join(map(str,id[0]))
