@@ -4,6 +4,7 @@ import random
 from databasemanager import *
 from discord import app_commands
 from datetime import datetime
+import json
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -45,11 +46,22 @@ class Fun(commands.Cog):
         else:
             await ctx.reply(f"{outcome} I chose `{bot_choice}` and you chose `{user_choice}`!")
 
-    @commands.command()
-    async def timestamp(self, ctx):
-        dt_object = datetime.now()
-        unix_ts = int(dt_object.timestamp())
-        await ctx.reply(f"<t:{unix_ts}>")
+    @app_commands.command(name="trivia", description="Play a game of trivia ")
+    async def trivia(self, interaction: discord.Interaction):
+        #Load the JSON file 
+        def load_questions(filename):
+            with open(filename, "r") as file:
+                data = json.load(file)
+            return data
+        questions = load_questions("triviastuff.json")
+
+        random.shuffle(questions)
+
+        for question_data in questions:
+            question = question_data["question"]
+            options = question_data["options"]
+            answer = question_data["answer"]
+
 
             
             
