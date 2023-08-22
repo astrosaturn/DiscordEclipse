@@ -16,7 +16,7 @@ class Currency(commands.Cog):
         print("Currency cog ready.")
 
     @app_commands.command(name="transfer", description="Transfer some of your credits to someone else")
-    async def trasnfer(self, interaction: discord.Interaction, target: discord.User, amount: int):        
+    async def trasnfer(self, interaction: discord.Interaction, amount: int, target: discord.User):        
         author_balance = get_credits(interaction.user.id)
 
         if author_balance >= amount:
