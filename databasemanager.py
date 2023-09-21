@@ -285,10 +285,13 @@ def get_scrape_channel_id(guild_id: int):
         "SELECT scrape_chan_id FROM guilds WHERE guild_id = ?", (guild_id,)
     )
     id = cur.fetchall()
-    id = ''.join(map(str,id[0]))
-    id = int(id)
-    return id
-
+    if id == None:
+        return
+    else:
+        id = ''.join(map(str,id[0]))
+        id = int(id)
+        return id
+    
 #Set the webhook ID
 def set_webhook_id(webhook_id:int, guild_id:int):
     cur.execute(

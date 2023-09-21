@@ -48,6 +48,9 @@ class Fun(commands.Cog):
 
     @app_commands.command(name="trivia", description="Play a game of trivia ")
     async def trivia(self, interaction: discord.Interaction):
+        def check(m):
+            return m.author == interaction.user and m.channel == interaction.channel
+        
         #Load the JSON file 
         def load_questions(filename):
             with open(filename, "r") as file:
@@ -61,7 +64,26 @@ class Fun(commands.Cog):
             question = question_data["question"]
             options = question_data["options"]
             answer = question_data["answer"]
+        await interaction.channel.send(question)
 
+
+        embed = discord.Embed(
+            colour=0xc35187,
+            title="Options",
+            timestamp=datetime.now()
+        )
+        for i, option in enumerate(options, start=1):
+            embed.add_field(name=' ', value=f"{i}. {option}", inline=False)
+        await interaction.channel.send(embed=embed)
+        
+        response = await self.bot.wait_for('message', check=check)
+
+        if response.content.lower() == answer.lower():
+            await interaction.channel.send("Correct! You have been awarded 20 XP and 200 credits!")
+            add_credits(200, interaction.user.id)
+            add_xp(20, interaction.user.id)
+        else:
+            await interaction.channel.send(f"Incorrect. The answer was {answer}. Your answer was {response.content}.")
 
             
             

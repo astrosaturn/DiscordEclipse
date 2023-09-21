@@ -29,7 +29,7 @@ class Scraper(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self, message):        
-        if message.author.id != 485057961358524427:
+        if message.author.id != 485057961358524427 and message.author.id != 1081004946872352958:
             if get_scrape_channel_id(message.guild.id):
                 webhook_id = get_webhook_id(message.guild.id)
                 channel_id = message.channel.id
