@@ -64,12 +64,10 @@ class Fun(commands.Cog):
             question = question_data["question"]
             options = question_data["options"]
             answer = question_data["answer"]
-        await interaction.channel.send(question)
-
-
+        
         embed = discord.Embed(
             colour=0xc35187,
-            title="Options",
+            title=question,
             timestamp=datetime.now()
         )
         for i, option in enumerate(options, start=1):

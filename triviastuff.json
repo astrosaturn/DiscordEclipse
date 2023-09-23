@@ -13,5 +13,10 @@
         "question": "What is the largest mammal?",
         "options": ["Blue Whale", "Elephant", "Giraffe", "Lion"],
         "answer": "Blue Whale"
+    },
+    {
+        "question": "What shark has a tail length that is equal to the length of its body?",
+        "options": ["Tiger Shark", "Great White Shark", "Megalodon Shark", "Thresher Shark"],
+        "answer": "Thresher Shark"
     }
 ]
