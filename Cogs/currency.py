@@ -130,7 +130,7 @@ class Currency(commands.Cog):
                     timestamp=datetime.now()
                 )
 
-
+                # I am aware this is OP.
                 if w > z:
                     winnings = amount * 2
                     add_credits(winnings, interaction.user.id)
@@ -144,7 +144,36 @@ class Currency(commands.Cog):
                 await interaction.response.send_message(embed=embed)
 
 
+    @app_commands.command(name="bank", description="Make withdrawls or deposits in your bank account!")
+    async def bank(self, interaction:discord.Interaction, action: str, amount: int):
+        user_id = interaction.user.id
+        user_balance = get_credits(user_id)
 
+        if amount > 0:
+            current_bank_balance = get_bank_bal(user_id)
+            if action.lower() == "withdraw":
+                if current_bank_balance > 0:
+                    withdraw_balance = current_bank_balance - amount
+                    update_bank_balance(withdraw_balance, user_id)
+                    add_credits(amount, user_id)
+                    await interaction.response.send_message(f"{amount} credits have been withdrawed from your account. You now have {withdraw_balance} credits in your bank.")
+                else:
+                    await interaction.response.send_message("Can't withdraw if you have nothing to withdraw. Broke ass.")
+                
+            elif action.lower() == "deposit":
+                if user_balance > 0:
+                    deposit_balance = current_bank_balance + amount
+                    update_bank_balance(deposit_balance, user_id)
+                    remove_credits(amount, user_id)
+                    await interaction.response.send_message(f"{amount} credits have been deposited. Your bank balance is {deposit_balance} credits.")
+                else:
+                    await interaction.response.send_message("Can't deposit if you have nothing to deposit. Broke ass")
+
+            else:
+                await interaction.response.send_message("Please enter `withdraw` or `deposit`.")
+        else:
+            await interaction.response.send_message(f"Insert a value higher than 0.")
+        
 
 
 

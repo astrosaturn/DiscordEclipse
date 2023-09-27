@@ -23,7 +23,7 @@ cur = conn.cursor()
 #Insert a user into the database
 def initiate_user(user_id: int):
     cur.execute(
-        "INSERT INTO users (user_id, level, current_xp, credits, daily_cooldown, theft_cooldown) VALUES (?, 1, 0, 0, 0, 0)", (user_id,))
+        "INSERT INTO users (user_id, level, current_xp, credits, daily_cooldown, theft_cooldown, bank) VALUES (?, 1, 0, 0, 0, 0, 0)", (user_id,))
     conn.commit()
 
 #Get a user's current XP
@@ -216,11 +216,26 @@ def set_theft_cooldown(amount: int, user_id: int):
     )
     conn.commit()
 
+#Get the user's bank balance
+def get_bank_bal(user_id: int):
+    cur.execute(
+        "SELECT bank FROM users WHERE user_id = ?", (user_id,)
+    )
+    balance = cur.fetchone()
+    balance = ''.join(map(str,balance[0]))
+    balance = int(balance)
+    return balance
+
+#Update a users bank balance
+def update_bank_balance(amount: int, user_id: int):
+    cur.exectue(
+        "UPDATE users SET bank = ? WHERE user_id = ?", (amount, user_id,)
+    )
+    conn.commit()
 
 
 
 #GUILD TABLE
-
 #Initiate a guild into the DB
 def init_guild(guild_id: int):
     cur.execute(
