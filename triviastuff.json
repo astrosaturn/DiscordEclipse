@@ -18,5 +18,90 @@
         "question": "What shark has a tail length that is equal to the length of its body?",
         "options": ["Tiger Shark", "Great White Shark", "Megalodon Shark", "Thresher Shark"],
         "answer": "Thresher Shark"
+    },
+    {
+        "question": "Which gas do plants absorb from the atmosphere during photosynthesis?",
+        "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+        "answer": "Carbon Dioxide"
+    },
+    {
+        "question": "Who wrote the play 'Romeo and Juliet'?",
+        "options": ["William Wordsworth", "George Orwell", "William Shakespeare", "Charles Dickens"],
+        "answer": "William Shakespeare"
+    },
+    {
+        "question": "What is the chemical symbol for gold?",
+        "options": ["Go", "Au", "Ag", "Ge"],
+        "answer": "Au"
+    },
+    {
+        "question": "Which country is known as the Land of the Rising Sun?",
+        "options": ["China", "South Korea", "Japan", "Vietnam"],
+        "answer": "Japan"
+    },
+    {
+        "question": "What is the largest organ in the human body?",
+        "options": ["Heart", "Brain", "Liver", "Skin"],
+        "answer": "Skin"
+    },
+    {
+        "question": "In which year did Christopher Columbus first reach the Americas?",
+        "options": ["1492", "1607", "1776", "1865"],
+        "answer": "1492"
+    },
+    {
+        "question": "What is the chemical symbol for water?",
+        "options": ["H2O", "CO2", "O2", "N2"],
+        "answer": "H2O"
+    },
+    {
+        "question": "Which planet is known as the 'Morning Star' or 'Evening Star'?",
+        "options": ["Mars", "Venus", "Jupiter", "Saturn"],
+        "answer": "Venus"
+    },
+    {
+        "question": "What is the smallest prime number?",
+        "options": ["0", "1", "2", "3"],
+        "answer": "2"
+    },
+    {
+        "question": "Which gas makes up the majority of Earth's atmosphere?",
+        "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+        "answer": "Nitrogen"
+    },
+    {
+        "question": "Who is the author of 'To Kill a Mockingbird'?",
+        "options": ["Harper Lee", "J.K. Rowling", "F. Scott Fitzgerald", "George Orwell"],
+        "answer": "Harper Lee"
+    },
+    {
+        "question": "What is the largest planet in our solar system?",
+        "options": ["Mars", "Earth", "Jupiter", "Venus"],
+        "answer": "Jupiter"
+    },
+    {
+        "question": "What is the chemical symbol for iron?",
+        "options": ["Ir", "Fe", "Au", "Ag"],
+        "answer": "Fe"
+    },
+    {
+        "question": "In which year did the Titanic sink?",
+        "options": ["1907", "1912", "1921", "1935"],
+        "answer": "1912"
+    },
+    {
+        "question": "Which country is known as the 'Land of the Midnight Sun'?",
+        "options": ["Russia", "Canada", "Norway", "Sweden"],
+        "answer": "Norway"
+    },
+    {
+        "question": "What is the largest species of shark?",
+        "options": ["Hammerhead Shark", "Great White Shark", "Whale Shark", "Tiger Shark"],
+        "answer": "Whale Shark"
+    },
+    {
+        "question": "Who painted the Mona Lisa?",
+        "options": ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Michelangelo"],
+        "answer": "Leonardo da Vinci"
     }
 ]

@@ -80,22 +80,24 @@ class Fun(commands.Cog):
         response = await self.bot.wait_for('message', check=check)
         if response.content.lower() == answer.lower():
             embed = discord.Embed(
-                colour=0xc35187,
+                colour=0x1cfc03,
                 title="Correct!",
                 timestamp=datetime.now()
             )
-            embed.add_field(name=question, value=f'You have been awarded 20 XP and 200 Credits!\nThe answer was "{answer}".')
+            embed.add_field(name=question, value=f'You have been awarded 20 XP and 200 Credits!\n\nThe answer was "{answer}".')
+            embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
             msg = await interaction.original_response()
             await msg.edit(embed=embed)
             add_credits(200, interaction.user.id)
             add_xp(20, interaction.user.id)
         else:
             embed = discord.Embed(
-                colour=0xc35187,
+                colour=0xfc0303,
                 title="Incorrect!",
                 timestamp=datetime.now()
             )
-            embed.add_field(name=question, value=f'The correct answer was "{answer}".\nYour answer was "{response.content}."')
+            embed.add_field(name=question, value=f'The correct answer was "{answer}".\n\nYour answer was "{response.content}."')
+            embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
             
             
             msg = await interaction.original_response()
