@@ -2,106 +2,106 @@
     {
         "question": "What is the capital of France?",
         "options": ["Paris", "Madrid", "Rome", "Berlin"],
-        "answer": "Paris"
+        "answer": ["Paris", 1]
     },
     {
         "question": "Which planet is known as the Red Planet?",
         "options": ["Mars", "Venus", "Titan", "Jupiter"],
-        "answer": "Mars"
+        "answer": ["Mars", "1"]
     },
     {
         "question": "What is the largest mammal?",
         "options": ["Blue Whale", "Elephant", "Giraffe", "Lion"],
-        "answer": "Blue Whale"
+        "answer": ["Blue Whale", "1"]
     },
     {
         "question": "What shark has a tail length that is equal to the length of its body?",
         "options": ["Tiger Shark", "Great White Shark", "Megalodon Shark", "Thresher Shark"],
-        "answer": "Thresher Shark"
+        "answer": ["Thresher Shark", "4"]
     },
     {
         "question": "Which gas do plants absorb from the atmosphere during photosynthesis?",
         "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-        "answer": "Carbon Dioxide"
+        "answer": ["Carbon Dioxide", "2"]
     },
     {
         "question": "Who wrote the play 'Romeo and Juliet'?",
         "options": ["William Wordsworth", "George Orwell", "William Shakespeare", "Charles Dickens"],
-        "answer": "William Shakespeare"
+        "answer": ["William Shakespeare", "1"]
     },
     {
         "question": "What is the chemical symbol for gold?",
         "options": ["Go", "Au", "Ag", "Ge"],
-        "answer": "Au"
+        "answer": ["Au", "2"]
     },
     {
         "question": "Which country is known as the Land of the Rising Sun?",
         "options": ["China", "South Korea", "Japan", "Vietnam"],
-        "answer": "Japan"
+        "answer": ["Japan", "3"]
     },
     {
         "question": "What is the largest organ in the human body?",
         "options": ["Heart", "Brain", "Liver", "Skin"],
-        "answer": "Skin"
+        "answer": ["Skin", "4"]
     },
     {
         "question": "In which year did Christopher Columbus first reach the Americas?",
         "options": ["1492", "1607", "1776", "1865"],
-        "answer": "1492"
+        "answer": ["1492", "1"]
     },
     {
         "question": "What is the chemical symbol for water?",
         "options": ["H2O", "CO2", "O2", "N2"],
-        "answer": "H2O"
+        "answer": ["H2O", "1"]
     },
     {
         "question": "Which planet is known as the 'Morning Star' or 'Evening Star'?",
         "options": ["Mars", "Venus", "Jupiter", "Saturn"],
-        "answer": "Venus"
+        "answer": ["Venus", "2"]
     },
     {
         "question": "What is the smallest prime number?",
         "options": ["0", "1", "2", "3"],
-        "answer": "2"
+        "answer": ["2", "3"]
     },
     {
         "question": "Which gas makes up the majority of Earth's atmosphere?",
         "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-        "answer": "Nitrogen"
+        "answer": ["Nitrogen", "3"]
     },
     {
         "question": "Who is the author of 'To Kill a Mockingbird'?",
         "options": ["Harper Lee", "J.K. Rowling", "F. Scott Fitzgerald", "George Orwell"],
-        "answer": "Harper Lee"
+        "answer": ["Harper Lee", "1"]
     },
     {
         "question": "What is the largest planet in our solar system?",
         "options": ["Mars", "Earth", "Jupiter", "Venus"],
-        "answer": "Jupiter"
+        "answer": ["Jupiter", "3"]
     },
     {
         "question": "What is the chemical symbol for iron?",
         "options": ["Ir", "Fe", "Au", "Ag"],
-        "answer": "Fe"
+        "answer": ["Fe", "2"]
     },
     {
         "question": "In which year did the Titanic sink?",
         "options": ["1907", "1912", "1921", "1935"],
-        "answer": "1912"
+        "answer": ["1912", "2"]
     },
     {
         "question": "Which country is known as the 'Land of the Midnight Sun'?",
         "options": ["Russia", "Canada", "Norway", "Sweden"],
-        "answer": "Norway"
+        "answer": ["Norway", "3"]
     },
     {
         "question": "What is the largest species of shark?",
         "options": ["Hammerhead Shark", "Great White Shark", "Whale Shark", "Tiger Shark"],
-        "answer": "Whale Shark"
+        "answer": ["Whale Shark", "3"]
     },
     {
         "question": "Who painted the Mona Lisa?",
         "options": ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Michelangelo"],
-        "answer": "Leonardo da Vinci"
+        "answer": ["Leonardo da Vinci", "1"]
     }
 ]
