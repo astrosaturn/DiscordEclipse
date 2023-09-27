@@ -71,8 +71,10 @@ class Fun(commands.Cog):
             timestamp=datetime.now()
         )
         await interaction.response.defer(thinking=True)
-        for i, option in enumerate(options, start=1):
-            embed.add_field(name=' ', value=f"{i}. {option}", inline=False)
+        #for i, option in enumerate(options, start=1):
+        #    embed.add_field(name="Options:", value=f"{i}. {option}\n", inline=False)
+        embed.add_field(name="Options:", value=f"1. {options[0]}\n2. {options[1]}\n3. {options[2]}\n4. {options[3]}\n")
+        embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
         msg = await interaction.original_response()
         await msg.edit(embed=embed)
         

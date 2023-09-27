@@ -103,7 +103,8 @@ class Currency(commands.Cog):
                 else:
                     cooldown_remaining = get_theft_cooldown(target.id)
                     await interaction.response.send_message(f"{interaction.user.mention}, you must wait <t:{cooldown_remaining}:R> before stealing from {target.mention} again!")
-
+        else:
+            await interaction.response.send_message(f"You must input a user to steal from!")
     @app_commands.command(name="gamble", description="Gamble a sum of your coins!")
     async def gamble(self, interaction: discord.Interaction, amount: int):
         user_balance = get_credits(interaction.user.id)
