@@ -20,31 +20,39 @@ class Fun(commands.Cog):
     #I am well aware I could just pick a random win, lose, or tie condition
     #However I wanted to show what the bot had picked to the player
     #So it seemed like an actual game
-    @commands.command(aliases=["rock paper scissors", "psr", "paper scissors rock"])
-    async def rps(self, ctx, *, choice: str):
+    @app_commands.command()
+    async def rps(self, interaction: discord.Interaction):
+        def check(m):
+            return m.author == interaction.user and m.channel == interaction.channel
+        
+        await interaction.response.defer(thinking=True)
+        msg = await interaction.original_response()
         bot_choices = ["rock", "paper", "scissors"]
         bot_choice = random.choice(bot_choices)
-        user_id = ctx.author.id
-        user_choice = choice.lower()
+        await msg.edit(content="Lets play Rock, Paper, Scissors! I've made my choice, now you make yours.")
+        user_id = interaction.user.id
+        user_choice = await self.bot.wait_for('message', check=check)
 
 
-        if user_choice == bot_choice:
+        if user_choice.content.lower() == bot_choice:
             outcome = "It's a tie!"
-        elif user_choice == "rock" and bot_choice == "scissors":
+        elif user_choice.content.lower() == "rock" and bot_choice == "scissors":
             outcome = "win"
-        elif user_choice == "scissors" and bot_choice == "paper":
+        elif user_choice.content.lower() == "scissors" and bot_choice == "paper":
             outcome = "win"
-        elif user_choice == "paper" and bot_choice == "rock":
+        elif user_choice.content.lower() == "paper" and bot_choice == "rock":
             outcome = "win"
         else:
             outcome = "You lose!"
         
         if outcome == "win":
             add_xp(15, user_id)
-            await ctx.reply(f"You win! I chose `{bot_choice}` and you chose `{user_choice}`! You have been given 15 XP for winning!")
+            message = f"You win! I chose `{bot_choice}` and you chose `{user_choice.content.lower()}`! You have been given 15 XP for winning!"
+            await msg.edit(content=message)
         
         else:
-            await ctx.reply(f"{outcome} I chose `{bot_choice}` and you chose `{user_choice}`!")
+            message = f"{outcome} I chose `{bot_choice}` and you chose `{user_choice.content.lower()}`!"
+            await msg.edit(content=message)
 
     @app_commands.command(name="trivia", description="Play a game of trivia ")
     async def trivia(self, interaction: discord.Interaction):
