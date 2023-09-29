@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 from discord import app_commands
 from typing import Optional,Literal
 
-
-
 load_dotenv()
 intents = discord.Intents.all()
 bot = commands.Bot(

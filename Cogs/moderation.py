@@ -176,6 +176,9 @@ class Moderation(commands.Cog):
         else:
             await ctx.reply(f"You do not have permission to use this command!") 
 
+    @app_commands.command(name="pfp", description="temp pfp command. ignore.")
+    async def pfp(self, interaction: discord.Interaction):
+        await interaction.response.send_message(interaction.user.avatar)
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))
