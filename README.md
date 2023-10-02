@@ -1,2 +1,2 @@
-# EclipseRewrite
-This is my attempt to rewrite my bot Eclipse.
+# Eclipse
+My multipurpose Discord bot.

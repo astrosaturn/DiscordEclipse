@@ -5,6 +5,12 @@ from databasemanager import *
 from discord import app_commands
 from datetime import datetime
 import json
+import openai
+import os
+import time
+from dotenv import load_dotenv
+
+openai.api_key = (os.getenv("OPEN_AI_KEY"))
 
 class Fun(commands.Cog):
     def __init__(self, bot):
@@ -112,6 +118,27 @@ class Fun(commands.Cog):
             
             msg = await interaction.original_response()
             await msg.edit(embed=embed)
+    
+    @app_commands.command(name="chatgpt", description="Send a query to ChatGPT!")
+    async def chatgpt(self, interaction: discord.Interaction, query: str):
+        await interaction.response.defer()
+        def get_completion(prompt, model="gpt-3.5-turbo"):
+            messages = [{"role": "user", "content": prompt}]
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=messages,
+                temperature=0.3
+            )
+            return response.choices[0].message["content"]
+        response = get_completion(query)
+        msg = await interaction.original_response()
+        embed = discord.Embed(
+            colour=0xfc8c03,
+            timestamp=datetime.now()
+        )
+        embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT: "{response}"')
+        embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
+        await msg.edit(embed=embed)
             
             
 async def setup(bot):
