@@ -121,24 +121,27 @@ class Fun(commands.Cog):
     
     @app_commands.command(name="chatgpt", description="Send a query to ChatGPT!")
     async def chatgpt(self, interaction: discord.Interaction, query: str):
-        await interaction.response.defer()
-        def get_completion(prompt, model="gpt-3.5-turbo"):
-            messages = [{"role": "user", "content": prompt}]
-            response = openai.ChatCompletion.create(
-                model=model,
-                messages=messages,
-                temperature=0.3
+        if len(query) < 256:
+            await interaction.response.defer()
+            def get_completion(prompt, model="gpt-3.5-turbo"):
+                messages = [{"role": "user", "content": prompt}]
+                response = openai.ChatCompletion.create(
+                    model=model,
+                    messages=messages,
+                    temperature=1
+                )
+                return response.choices[0].message["content"]
+            response = get_completion(query)
+            msg = await interaction.original_response()
+            embed = discord.Embed(
+                colour=0xfc8c03,
+                timestamp=datetime.now()
             )
-            return response.choices[0].message["content"]
-        response = get_completion(query)
-        msg = await interaction.original_response()
-        embed = discord.Embed(
-            colour=0xfc8c03,
-            timestamp=datetime.now()
-        )
-        embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT: "{response}"')
-        embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
-        await msg.edit(embed=embed)
+            embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT: "{response}"')
+            embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
+            await msg.edit(embed=embed)
+        else:
+            await interaction.response.send_message("Your query must be under 256 characters!")
             
             
 async def setup(bot):

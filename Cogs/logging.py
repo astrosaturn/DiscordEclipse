@@ -66,8 +66,8 @@ class Logging(commands.Cog):
                 reason = entry.reason
                 break
                 
-        else:
-            reason = None
+        #else:
+            #reason = None
         
         embed = discord.Embed(
             title=f"{user.name} was banned.",

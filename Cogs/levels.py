@@ -104,8 +104,8 @@ class Levels(commands.Cog):
         embed.add_field(name=f"Level: {target_level}", value=f"XP: {target_xp}\n {xp_left} XP left until level {next_level}!",inline=False)
         
         target_credits = get_credits(user_id=target_id)
-        embed.add_field(name=f"Credits: {target_credits}",value=" ", inline=False)
-        author = interaction.user.id
+        target_bank = get_bank_bal(user_id=target_id)
+        embed.add_field(name=f"Credits: {target_credits}",value=f"Bank Balance: {target_bank}", inline=False)
         pfp = interaction.user.avatar
         embed.set_footer(text=target_id, icon_url=pfp)
         embed.set_thumbnail(url=target_avatar)

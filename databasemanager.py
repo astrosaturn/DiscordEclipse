@@ -324,3 +324,41 @@ def get_webhook_id(guild_id:int):
     id = ''.join(map(str,id[0]))
     id = int(id)
     return id
+
+#ACTIONS TABLE
+def generate_case_num():
+    cur.execute(
+        "SELECT MAX(casenum) FROM actions"
+    )
+    recent_case = cur.fetchone()
+    if recent_case == None:
+        recent_case = 0
+    else:
+        recent_case = int(recent_case[0])
+    new_casenum = recent_case + 1
+    return new_casenum
+
+def create_action(user_id:int, guild_id:int, type:str, reason:str, moderator:int, username:str):
+    case_num = generate_case_num()
+    cur.execute(
+        "INSERT INTO actions (user_id, guild_id, type, reason, moderator, casenum, username) VALUES (?, ?, ?, ?, ?, ?, ?)", (user_id, guild_id, type, reason, moderator, case_num, username)
+    )
+    conn.commit()
+
+def get_case(case_num:int):
+    cur.execute(
+        "SELECT * FROM actions WHERE casenum = ?", (case_num,)
+    )
+    row = cur.fetchone()
+
+    if row is not None:
+        user_id, guild_id, type, reason, moderator, casenum, username = row
+        return int(user_id), int(guild_id), type, reason, int(moderator), int(casenum), username
+    
+def get_case_num(user_id):
+    cur.execute(
+        "SELECT MAX(casenum) FROM actions WHERE user_id = ?", (user_id,)
+    )
+    case_num = cur.fetchone()
+    case_num = int(case_num[0])
+    return case_num

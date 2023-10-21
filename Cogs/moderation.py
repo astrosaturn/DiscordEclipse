@@ -47,7 +47,9 @@ class Moderation(commands.Cog):
         if interaction.user.guild_permissions.ban_members:
             if user is not None:
                 await user.ban(reason=reason)
-                await interaction.response.send_message(f'{user} has been banned for the reason: `{reason}`')
+                create_action(user.id,interaction.guild.id,"Ban",reason,interaction.user.id,user.name)
+                case_num = get_case_num(user_id= user.id)               
+                await interaction.response.send_message(f'{user} has been banned for the reason: `{reason}`. Case #{case_num}')
             else:
                 await interaction.response.send_message(f"{interaction.user.mention}, you must select a valid user!", ephemeral=True)
         else:
@@ -92,6 +94,28 @@ class Moderation(commands.Cog):
                 await interaction.response.send_message("You must input a time in seconds.", ephemeral=True)
         else:
             await interaction.response.send_message("You do not have permission to use this command!", ephemeral=True)
+    
+    #Gets a user's case
+    @app_commands.command(name="getcase", description="Gets a user's moderaton case.")
+    async def getcase(self, interaction:discord.Interaction, casenumber:int):
+        user_id, guild_id, type, reason, moderator, casenum , username= get_case(case_num=casenumber)
+        guild_id = int(guild_id)
+        if casenumber != None:
+            
+            if guild_id == interaction.guild.id:
+                embed = discord.Embed(
+                    title=f"{username}",
+                    colour=0xed5f5a,
+                    timestamp=datetime.now()
+                )
+                embed.add_field(name=f"Case #{casenum}", value=f"{user_id}", inline=False)
+                embed.add_field(name=f"Action: {type}", value=f"**Reason:**\n`{reason}`", inline=False)
+                embed.set_footer(text=f"Moderator: {moderator}")
+                await interaction.response.send_message(embed=embed)
+            else:
+                await interaction.response.send_message(f"Sorry, this case {guild_id} is not from this guild {interaction.guild.id}.")
+        else:
+            await interaction.response.send_message("You must input a case number!")
     
     #Set a user's level
     @commands.command()
