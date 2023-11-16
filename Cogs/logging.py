@@ -56,37 +56,6 @@ class Logging(commands.Cog):
         else:
             return
 
-    @commands.Cog.listener()
-    async def on_member_ban(self, guild, user):
-        log_channel = get_log_channel(guild.id)
-        channel = self.bot.get_channel(log_channel)
-        
-        async for entry in guild.audit_logs(limit=1, action=discord.AuditLogAction.ban):
-            if entry.target == user:
-                reason = entry.reason
-                break
-                
-        #else:
-            #reason = None
-        
-        embed = discord.Embed(
-            title=f"{user.name} was banned.",
-            colour=0x855a0c,
-            timestamp=datetime.now()
-        )
-
-        if reason:
-            if channel:
-                embed.add_field(name=f"For the reason:", value=f"`{reason}`")
-            else:
-                return
-        else:
-            embed.add_field(name=f"{user.name} was banned.", value="But there was no reason.")
-        
-        await channel.send(embed=embed)
-                
-
-
 
 async def setup(bot):
     await bot.add_cog(Logging(bot))

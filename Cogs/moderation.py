@@ -35,7 +35,9 @@ class Moderation(commands.Cog):
         if interaction.user.guild_permissions.kick_members:
             if user is not None:
                 await user.kick(reason=reason)
-                await interaction.response.send_message(f'{user} has been kicked for the reason: `{reason}`')
+                create_action(user.id,interaction.guild.id,"Kick",reason,interaction.user.id,user.name)
+                case_num = get_case_num(user_id=user.id)
+                await interaction.response.send_message(f'{user} has been kicked for the reason: `{reason}` | Case #{case_num}')
             else:
                 await interaction.response.send_message(f"{interaction.user.mention}, you must select a valid user!", ephemeral=True)
         else:
@@ -46,10 +48,23 @@ class Moderation(commands.Cog):
     async def ban(self, interaction: discord.Interaction, user:discord.Member,*,reason:str = None):
         if interaction.user.guild_permissions.ban_members:
             if user is not None:
-                await user.ban(reason=reason)
                 create_action(user.id,interaction.guild.id,"Ban",reason,interaction.user.id,user.name)
-                case_num = get_case_num(user_id= user.id)               
-                await interaction.response.send_message(f'{user} has been banned for the reason: `{reason}`. Case #{case_num}')
+                case_num = get_case_num(user_id= user.id)
+                await user.send(f'You have been banned by <@{interaction.user.id}> from "{interaction.guild.name}" for: **{reason}**.')               
+                await user.ban(reason=reason)
+
+                channel = get_log_channel(interaction.guild.id)
+                channel = self.bot.get_channel(channel)
+                embed = discord.Embed(
+                    title=f"{user.name} was banned. Case number #{case_num}",
+                    colour=0x855a0c,
+                    timestamp=datetime.now()
+                )
+                embed.add_field(name="Reason:", value=reason, inline=False)
+                embed.add_field(name="Duration:", value="To be implemented.", inline=False)
+                embed.set_footer(text=f"Moderator: {interaction.user.name}", icon_url=interaction.user.avatar.url)
+                await channel.send(embed=embed)
+                await interaction.response.send_message(f'{user} has been banned for the reason: `{reason}` | Case #{case_num}', ephemeral=True)
             else:
                 await interaction.response.send_message(f"{interaction.user.mention}, you must select a valid user!", ephemeral=True)
         else:
@@ -104,11 +119,11 @@ class Moderation(commands.Cog):
             
             if guild_id == interaction.guild.id:
                 embed = discord.Embed(
-                    title=f"{username}",
+                    title=f"User: {username}",
                     colour=0xed5f5a,
                     timestamp=datetime.now()
                 )
-                embed.add_field(name=f"Case #{casenum}", value=f"{user_id}", inline=False)
+                embed.add_field(name=f"Case #{casenum}", value=f"User ID: {user_id}", inline=False)
                 embed.add_field(name=f"Action: {type}", value=f"**Reason:**\n`{reason}`", inline=False)
                 embed.set_footer(text=f"Moderator: {moderator}")
                 await interaction.response.send_message(embed=embed)
