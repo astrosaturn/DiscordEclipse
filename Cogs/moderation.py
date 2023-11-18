@@ -164,6 +164,32 @@ class Moderation(commands.Cog):
         else:
             await ctx.reply(f"You do not have permission to use this command!")
     
+    #Edit's a user's XP
+    @commands.command()
+    async def xp(self, ctx, action: str, value: int, user:discord.User):
+        action = action.lower()
+        if ctx.author.id == 345683515528183808:
+            user_id = user.id
+            if user is not None:
+                if value is not None:
+                    if action == "add" or action == "remove" or action == "set" or action != None:
+                        set_user_stat("current_xp", action, value, user_id)
+                        if action == "add":
+                            await ctx.reply(f"<@{user_id}> has had `{value}` added to their current XP.")  
+                        elif action == "remove":
+                            await ctx.reply(f"<@{user_id}> has had `{value}` removed to their current XP.")
+                        elif action == "set":
+                            await ctx.reply(f"<@{user_id}> has had their XP set to `{value}`.")
+                    else:
+                        await ctx.reply(f"You have to input a valid action.")
+                else:
+                    await ctx.reply(f"You must input an XP amount!")
+            else: 
+                await ctx.reply(f"You must input a valid user!")
+        else:
+            await ctx.reply(f"You do not have permission to use this command!")
+    
+    
     #Set's a user's credits
     @commands.command()
     async def setcredits(self, ctx, user:discord.User, amount: int):

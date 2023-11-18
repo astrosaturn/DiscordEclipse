@@ -64,6 +64,44 @@ def get_user_level(user_id: int):
     level = cur.fetchone()
     return level
 
+#Let me try and see if i can lower the line limit a little bit LOL!
+#Hopefully this will be able to be used to streamline the code
+#And improve readability
+def get_user_stat(stat_type: str, user_id: int):
+    stat_type = stat_type.lower()
+    
+    #If the user isnt in the database, add them.
+    querey_user = check_db_for_user(user_id)
+    if querey_user is None:
+        initiate_user(user_id=user_id)
+    
+    cur.execute(f"SELECT {stat_type} FROM users WHERE user_id = ?", (user_id,))
+    x = cur.fetchone()
+    x = int(x[0])
+    return x
+
+def set_user_stat(stat_type: str, action: str, amount: int, user_id: int):
+    stat_type = stat_type.lower()
+    action = action.lower()
+
+    #First, check if the user is in the database.
+    querey_user = check_db_for_user(user_id)
+    if querey_user is None:
+        initiate_user(user_id=user_id)
+    
+    match stat_type:
+        case "current_xp":
+            current_xp = get_user_stat("current_xp", user_id)
+            if (action == "add"):
+                new_stat_value = current_xp + amount
+            elif (action == "remove"):
+                new_stat_value = current_xp - amount
+            else:
+                new_stat_value = amount
+
+    cur.execute(f'UPDATE users SET {stat_type} = ? WHERE user_id = ?', (new_stat_value, user_id,))
+    conn.commit()
+
 #Take the xp you want to add, and the user's id and add the XP to the user in the DB
 def set_user_xp(xp_amount: int, user_id: int):    
     querey_user = check_db_for_user(user_id)
