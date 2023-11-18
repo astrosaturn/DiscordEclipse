@@ -147,22 +147,6 @@ class Moderation(commands.Cog):
                 await ctx.reply(f"You must input a valid user!")
         else:
             await ctx.reply(f"You do not have permission to use this command!")
-
-    #Sets a user's XP
-    @commands.command()
-    async def setxp(self, ctx, user:discord.User, xp_toset: int):
-        if ctx.author.id == 345683515528183808:
-            user_id = user.id
-            if user is not None:
-                if xp_toset is not None:
-                    set_user_xp(xp_toset, user_id)
-                    await ctx.reply(f"<@{user_id}>'s XP has been set to {xp_toset}")
-                else:
-                    await ctx.reply(f"You must enter an XP value!")
-            else:
-                await ctx.reply(f"You must input a valid user!")
-        else:
-            await ctx.reply(f"You do not have permission to use this command!")
     
     #Edit's a user's XP
     @commands.command()
