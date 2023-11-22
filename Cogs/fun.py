@@ -52,7 +52,7 @@ class Fun(commands.Cog):
             outcome = "You lose!"
         
         if outcome == "win":
-            add_xp(15, user_id)
+            set_user_stat("current_xp", "add", 15, user_id)
             message = f"You win! I chose `{bot_choice}` and you chose `{user_choice.content.lower()}`! You have been given 15 XP for winning!"
             await msg.edit(content=message)
         
@@ -104,8 +104,9 @@ class Fun(commands.Cog):
             embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
             msg = await interaction.original_response()
             await msg.edit(embed=embed)
-            add_credits(200, interaction.user.id)
-            add_xp(20, interaction.user.id)
+            set_user_stat("credits", "add", 200, interaction.user.id)
+            set_user_stat("current_xp", "add", 20, interaction.user.id)
+            
         else:
             embed = discord.Embed(
                 colour=0xfc0303,

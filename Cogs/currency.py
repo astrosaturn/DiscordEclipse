@@ -17,12 +17,13 @@ class Currency(commands.Cog):
 
     @app_commands.command(name="transfer", description="Transfer some of your credits to someone else")
     async def trasnfer(self, interaction: discord.Interaction, amount: int, target: discord.User):        
-        author_balance = get_credits(interaction.user.id)
+        author_balance = get_user_stat("credits", interaction.user.id)
 
         if author_balance >= amount:
-            remove_credits(amount, interaction.user.id)
-            add_credits(amount, target.id)
-            author_new_balance = get_credits(interaction.user.id)
+            set_user_stat("credits", "remove", amount, interaction.user.id)
+            set_user_stat("credits", "add", amount, target.id)
+
+            author_new_balance = get_user_stat("credits", interaction.user.id)
             embed = discord.Embed(
                 colour=0x53c970,
                 timestamp=datetime.now()
@@ -31,16 +32,13 @@ class Currency(commands.Cog):
             embed.add_field(name="Remaning balance:", value=f"{author_new_balance} credits", inline=False)
             embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
             await interaction.response.send_message(embed=embed)
-            
-            
-            #await interaction.response.send_message(f"You have given {amount} credits to {target.mention}")
         else:
             await interaction.response.send_message(f"You do not have enough credits to transfer.")
     
     @app_commands.command(name="daily", description="Redeem 1000 credits every day")
     async def daily(self, interaction: discord.Interaction):
         if cooldown_complete(interaction.user.id):
-            add_credits(1000, interaction.user.id)
+            set_user_stat("credits", "add", 1000, interaction.user.id)
             init_cooldown(interaction.user.id)
             
             embed = discord.Embed(
@@ -60,8 +58,8 @@ class Currency(commands.Cog):
     async def steal(self, interaction: discord.Interaction, target: discord.User):
         if target is not None:
             
-            target_balance = get_credits(target.id)
-            author_balance = get_credits(interaction.user.id)
+            target_balance = get_user_stat("credits", target.id)
+            author_balance = get_user_stat("credits", interaction.user.id)
 
             #Calculate this here because it will be used regardless
             #of if the user wins or loses the steal
@@ -85,18 +83,19 @@ class Currency(commands.Cog):
                     else:
                         chance = randint(1, 3)
                         if chance > 1:      #66% chance to steal, this may need to be adjusted.
-                            add_credits(theft_amount, interaction.user.id)
-                            remove_credits(theft_amount, target.id)
+                            set_user_stat("credits", "add", theft_amount, interaction.user.id)
+                            set_user_stat("credits", "remove", theft_amount, target.id)
+
                             set_theft_cooldown(cooldown, target.id)
                             embed.add_field(name="..and succeeds!", value=f"{interaction.user.mention} successfully stole {theft_amount} credits from {target.mention}!")
                             
                         else:       #33% to fail and lose your balance instead LOL!
-                            if author_balance < theft_amount:
-                                set_credits(0, interaction.user.id)                        
+                            if author_balance < theft_amount: 
+                                set_user_stat("credits", "set", 0, interaction.user.id)                   
                                 set_theft_cooldown(cooldown, target.id)
                                 embed.add_field(name="..and fails miserably!", value=f"{interaction.user.mention} failed to steal from {target.mention} and lost all of their credits!")
                             else:
-                                remove_credits(theft_amount, interaction.user.id)
+                                set_user_stat("credits", "remove", theft_amount, interaction.user.id) 
                                 set_theft_cooldown(cooldown, target.id)
                                 embed.add_field(name="...and fails!", value=f"{interaction.user.mention} failed to steal from {target.mention} and lost {theft_amount} credits!")
                     await interaction.response.send_message(embed=embed)
@@ -108,7 +107,7 @@ class Currency(commands.Cog):
             
     @app_commands.command(name="gamble", description="Gamble a sum of your coins!")
     async def gamble(self, interaction: discord.Interaction, amount: int):
-        user_balance = get_credits(interaction.user.id)
+        user_balance = get_user_stat("credits", interaction.user.id)
         
         #Some preliminary stupid-checks. Fuck you @frantictaco.
         if user_balance == 0:
@@ -135,12 +134,12 @@ class Currency(commands.Cog):
                 # I am aware this is OP.
                 if w > z:
                     winnings = amount * 2
-                    add_credits(winnings, interaction.user.id)
-                    new_bal = get_credits(interaction.user.id)
+                    set_user_stat("credtis", "add", winnings, interaction.user.id)
+                    new_bal = get_user_stat("credits", interaction.user.id)
                     embed.add_field(name="And wins!", value=f"{interaction.user.mention} has won `{winnings}` credits.\n Their balance is now `{new_bal}`.")
                 else:
-                    remove_credits(amount, interaction.user.id)
-                    new_bal = get_credits(interaction.user.id)
+                    set_user_stat("credtis", "remove", amount, interaction.user.id)
+                    new_bal = get_user_stat("credits", interaction.user.id)
                     embed.add_field(name="And loses.", value=f"{interaction.user.mention} has lost `{amount}` credits.\n Their new balance is `{new_bal}`.")
                 
                 await interaction.response.send_message(embed=embed)
@@ -149,15 +148,15 @@ class Currency(commands.Cog):
     @app_commands.command(name="bank", description="Make withdrawls or deposits in your bank account!")
     async def bank(self, interaction:discord.Interaction, action: str, amount: int):
         user_id = interaction.user.id
-        user_balance = get_credits(user_id)
+        user_balance = get_user_stat("credits", interaction.user.id)
 
         if amount > 0:
-            current_bank_balance = get_bank_bal(user_id)
+            current_bank_balance = get_user_stat("bank", user_id)
             if action.lower() == "withdraw":
                 if current_bank_balance > 0:
                     withdraw_balance = current_bank_balance - amount
-                    update_bank_balance(withdraw_balance, user_id)
-                    add_credits(amount, user_id)
+                    set_user_stat("bank", "remove", withdraw_balance, user_id)
+                    set_user_stat("credits", "add", amount, user_id)
                     await interaction.response.send_message(f"{amount} credits have been withdrawed from your account. You now have {withdraw_balance} credits in your bank.")
                 else:
                     await interaction.response.send_message("Can't withdraw if you have nothing to withdraw. Broke ass.")
@@ -165,8 +164,8 @@ class Currency(commands.Cog):
             elif action.lower() == "deposit":
                 if user_balance > 0:
                     deposit_balance = current_bank_balance + amount
-                    update_bank_balance(deposit_balance, user_id)
-                    remove_credits(amount, user_id)
+                    set_user_stat("bank", "add", deposit_balance, user_id)
+                    set_user_stat("credits", "remove", amount, user_id)
                     await interaction.response.send_message(f"{amount} credits have been deposited. Your bank balance is {deposit_balance} credits.")
                 else:
                     await interaction.response.send_message("Can't deposit if you have nothing to deposit. Broke ass")

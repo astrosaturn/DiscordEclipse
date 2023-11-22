@@ -131,88 +131,28 @@ class Moderation(commands.Cog):
                 await interaction.response.send_message(f"Sorry, this case {guild_id} is not from this guild {interaction.guild.id}.")
         else:
             await interaction.response.send_message("You must input a case number!")
-    
-    #Set a user's level
+
     @commands.command()
-    async def setlevel(self, ctx, user:discord.User, level:int):
-        if ctx.author.id == 345683515528183808:
-            user = user.id        
-            if user is not None:
-                if level is not None:
-                    level_set(level,user)
-                    await ctx.reply(f"<@{user}>'s level has been set to {level}")
-                else:
-                    await ctx.reply(f"You must input a valid level.")
-            else:
-                await ctx.reply(f"You must input a valid user!")
-        else:
-            await ctx.reply(f"You do not have permission to use this command!")
-    
-    #Edit's a user's XP
-    @commands.command()
-    async def xp(self, ctx, action: str, value: int, user:discord.User):
+    async def setstat(self, ctx, user:discord.User, action: str, stat: str, value: int):
         action = action.lower()
-        if ctx.author.id == 345683515528183808:
-            user_id = user.id
+        user_id = user.id
+        if ctx.author.id == 345683515528183808: # This is an owner only command, isOwner() doesn't work for some reason.
             if user is not None:
                 if value is not None:
-                    if action == "add" or action == "remove" or action == "set" or action != None:
-                        set_user_stat("current_xp", action, value, user_id)
-                        if action == "add":
-                            await ctx.reply(f"<@{user_id}> has had `{value}` added to their current XP.")  
-                        elif action == "remove":
-                            await ctx.reply(f"<@{user_id}> has had `{value}` removed to their current XP.")
-                        elif action == "set":
-                            await ctx.reply(f"<@{user_id}> has had their XP set to `{value}`.")
+                    if action == "add" or action == "remove" or action == "set" and action != None:
+                        try:
+                            set_user_stat(f"{stat}", f"{action}", value, user_id)
+                            await ctx.reply(f"`{action}` `{stat}` for user <@{user_id}> for value `{value}`")
+                        except Exception as e:
+                            await ctx.reply(f"There was an error: `{e}`")
                     else:
-                        await ctx.reply(f"You have to input a valid action.")
+                        await ctx.reply("You must input a valid action!")
                 else:
-                    await ctx.reply(f"You must input an XP amount!")
-            else: 
-                await ctx.reply(f"You must input a valid user!")
-        else:
-            await ctx.reply(f"You do not have permission to use this command!")
-    
-    
-    #Set's a user's credits
-    @commands.command()
-    async def setcredits(self, ctx, user:discord.User, amount: int):
-        if ctx.author.id == 345683515528183808:
-            user_id = user.id
-            if user is not None:
-                set_credits(amount,user_id)
-                await ctx.reply(f"<@{user_id}>'s Credits have been set to {amount}")
+                    await ctx.reply("You must input a value!")
             else:
-                await ctx.reply(f"You must enter a user!")
+                await ctx.reply("You must enter a valid user!")
         else:
-            await ctx.reply(f"You do not have permission to use this command!")     
-    
-    #Removes a user's credits
-    @commands.command()
-    async def removecredits(self, ctx, user:discord.User, amount: int):
-        if ctx.author.id == 345683515528183808:
-            user_id = user.id 
-            if user is not None:
-                remove_credits(amount, user_id)
-                await ctx.reply(f"{amount} credits have been removed from <@{user_id}>.")
-            else:
-                await ctx.reply(f"You must enter a user.")
-        else:
-            await ctx.reply(f"You do not have permission to use this command!")    
-    
-    #Adds credit's to a user
-    @commands.command()
-    async def addcredits(self, ctx, user:discord.User, amount: int):
-        if ctx.author.id == 345683515528183808:
-            user_id = user.id
-            if user is not None:
-                add_credits(amount, user_id)
-                await ctx.reply(f"{amount} credits have been added to <@{user_id}>.")
-            else:
-                await ctx.reply(f"You must enter a user.")
-        else:
-            await ctx.reply(f"You do not have permission to use this command!")        
-
+            await ctx.reply("You do not have permission to use this command.")          
 
     #Sets the channel to send logs to in the database
     @commands.command()

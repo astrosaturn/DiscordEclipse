@@ -35,13 +35,12 @@ class Levels(commands.Cog):
             initiate_user(user_id=member_id)
         
         else:
-            member_xp = get_user_xp(user_id=member_id)
+            member_xp = get_user_stat("current_xp", member_id)
             member_level = get_user_level(user_id=member_id)
             member_level = int(member_level[0])
             
             xp_amount = randint(3, 10)      # Pick a random value
-            xp_to_give = member_xp + xp_amount      # Add together
-            set_user_xp(xp_to_give, member_id)      # Give the user XP
+            set_user_stat("current_xp", "add", xp_amount, member_id)   # Give the user XP
 
             xp_to_level_up = math.floor(100*(1.10) ** member_level)
             
@@ -49,9 +48,9 @@ class Levels(commands.Cog):
                 xp_to_level_up = 2000
             
             if member_xp >= xp_to_level_up:
-                member_new_level = member_level + 1  
-                level_set(new_level=member_new_level, user_id=member_id)      # Level the user up
-                set_user_xp(xp_amount=0, user_id=member_id)       # Reset their XP back to 0
+                member_new_level = member_level + 1
+                set_user_stat("level", set, member_new_level, member_id) #Level the user up
+                set_user_stat("current_xp", "set", 0, member_id)# Reset their XP back to 0
                 await message.add_reaction("🎉")        #Not as annoying as a message.
                 #await message.channel.send(f"<@{message.author.id}>, you have leveled up to level {member_new_level}!")   
                 return            
@@ -88,7 +87,7 @@ class Levels(commands.Cog):
         xp_to_level_up = math.floor(100*(1.30) ** target_level)
         if xp_to_level_up > 2000:
             xp_to_level_up = 2000
-        target_xp = get_user_xp(user_id=target_id)
+        target_xp = get_user_stat("current_xp", target_id)
 
         total_xp_to_levelup = xp_to_level_up - target_xp
         if total_xp_to_levelup < 0:
@@ -103,8 +102,8 @@ class Levels(commands.Cog):
         )
         embed.add_field(name=f"Level: {target_level}", value=f"XP: {target_xp}\n {xp_left} XP left until level {next_level}!",inline=False)
         
-        target_credits = get_credits(user_id=target_id)
-        target_bank = get_bank_bal(user_id=target_id)
+        target_credits = get_user_stat("credits", target_id)
+        target_bank = get_user_stat("bank", target_id)
         embed.add_field(name=f"Credits: {target_credits}",value=f"Bank Balance: {target_bank}", inline=False)
         pfp = interaction.user.avatar
         embed.set_footer(text=target_id, icon_url=pfp)

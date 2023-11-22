@@ -98,106 +98,36 @@ def set_user_stat(stat_type: str, action: str, amount: int, user_id: int):
                 new_stat_value = current_xp - amount
             else:
                 new_stat_value = amount
+        
+        case "level":
+            current_level = get_user_stat("level", user_id)
+            if (action == "add"):
+                new_stat_value = current_level + amount
+            elif (action == "remove"):
+                new_stat_value = current_level - amount
+            else:
+                new_stat_value = amount
+        
+        case "credits":
+            current_balance = get_user_stat("credits", user_id)
+            if (action == "add"):
+                new_stat_value = current_balance + amount
+            elif (action == "remove"):
+                new_stat_value = current_balance - amount
+            else:
+                new_stat_value = amount
+        
+        case "bank":
+            current_bank = get_user_stat("bank", user_id)
+            if (action == "add"):
+                new_stat_value = current_bank + amount
+            elif (action == "remove"):
+                new_stat_value = current_bank - amount
+            else:
+                new_stat_value = amount
 
     cur.execute(f'UPDATE users SET {stat_type} = ? WHERE user_id = ?', (new_stat_value, user_id,))
-    conn.commit()
-
-#Take the xp you want to add, and the user's id and add the XP to the user in the DB
-def set_user_xp(xp_amount: int, user_id: int):    
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
-        initiate_user(user_id=user_id) 
-                    
-    cur.execute(
-            "UPDATE users SET current_xp = ? WHERE user_id=?", (xp_amount, user_id,)
-        )
-    conn.commit()    
-
-#Change the level of the user to new_level
-def level_set(new_level: int, user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
-        initiate_user(user_id=user_id) 
-
-    cur.execute(
-            "UPDATE users SET level=? WHERE user_id=?", (new_level, user_id,)                   
-        )
-    conn.commit()
-
-#Add a user's xp together
-def add_xp(xp_amount: int, user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
-        initiate_user(user_id=user_id) 
-    
-    cur_xp = get_user_xp(user_id=user_id)
-    xp_to_give = cur_xp + xp_amount
-    cur.execute(
-        "UPDATE users SET current_xp = ? WHERE user_id=?", (xp_to_give, user_id,)
-    )
-    conn.commit()
-
-#Adds credits
-def add_credits(credit_amount: int, user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
-        initiate_user(user_id=user_id) 
-
-    #Get their credit amount first
-    cur.execute(
-        "SELECT credits FROM users WHERE user_id = ?", (user_id,)
-    )
-    current_credits = cur.fetchone()
-    current_credits = int(current_credits[0])
-        
-    added_amount = current_credits + credit_amount
-    cur.execute(
-        "UPDATE users SET credits = ? WHERE user_id = ?", (added_amount, user_id,)
-    )
-    conn.commit()
-
-#Removes credits
-def remove_credits(credit_amount: int, user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
-        initiate_user(user_id=user_id) 
-    #Get their credit amount first
-    cur.execute(
-        "SELECT credits FROM users WHERE user_id = ?", (user_id,)
-    )
-    current_credits = cur.fetchone()
-    current_credits = int(current_credits[0])       #Fuck truples
-
-    removed_amount = current_credits - credit_amount
-        
-    #aaaaand its gone
-    cur.execute(
-        "UPDATE users SET credits = ? WHERE user_id = ?", (removed_amount, user_id)
-    )
-    conn.commit
-
-#Sets a user's credits to an amount
-#This will exist for moderation purposes.
-def set_credits(credit_amount: int, user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
-        initiate_user(user_id=user_id)  
-    cur.execute(
-        "UPDATE users SET credits = ? WHERE user_id = ?", (credit_amount, user_id,)
-    )
-    conn.commit()
-
-#Get the user's current credit balance
-def get_credits(user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
-        initiate_user(user_id=user_id) 
-    cur.execute(
-        "SELECT credits FROM users WHERE user_id = ?", (user_id,)
-    )
-    cur_cred = cur.fetchone()
-    cur_cred = int(cur_cred[0])     #Fuck truples
-    return cur_cred
+    conn.commit()  
 
 #Create a day long cooldown
 def init_cooldown(user_id: int):
@@ -253,25 +183,6 @@ def set_theft_cooldown(amount: int, user_id: int):
         "UPDATE users SET theft_cooldown = ? WHERE user_id = ?", (amount, user_id,)
     )
     conn.commit()
-
-#Get the user's bank balance
-def get_bank_bal(user_id: int):
-    cur.execute(
-        "SELECT bank FROM users WHERE user_id = ?", (user_id,)
-    )
-    balance = cur.fetchone()
-    balance = ''.join(map(str,balance[0]))
-    balance = int(balance)
-    return balance
-
-#Update a users bank balance
-def update_bank_balance(amount: int, user_id: int):
-    cur.exectue(
-        "UPDATE users SET bank = ? WHERE user_id = ?", (amount, user_id,)
-    )
-    conn.commit()
-
-
 
 #GUILD TABLE
 #Initiate a guild into the DB
