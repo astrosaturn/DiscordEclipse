@@ -78,14 +78,14 @@ def get_user_stat(stat_type: str, user_id: int):
     x = int(x[0])
     return x
 
-def set_user_stat(stat_type: str, action: str, amount: int, user_id: int):
-    #First, check if the user is in the database.
+def set_user_stat(stat_type: str, action: str, amount: int, user_id: int): # <--- This function is only used internally and by one command that is only useable by a developer.
+    #First, check if the user is in the database.                                 It is also impossible to SQL inject into because of the checks it does so it wouldnt matter anyways.
     querey_user = check_db_for_user(user_id)
     if querey_user is None:
         initiate_user(user_id=user_id)
     
     match stat_type:
-        case "xp":
+        case "current_xp":
             current_xp = get_user_stat("current_xp", user_id)
             if (action == "add"):
                 new_stat_value = current_xp + amount
@@ -213,17 +213,19 @@ def set_log_channel(channel_id: int, guild_id: int):
         "UPDATE guilds SET log_chan_id = ? WHERE guild_id = ?", (channel_id, guild_id,)
     )
     conn.commit()
-    
-    
+
 #Get the guild's log channel
 def get_log_channel(guild_id: int):
     cur.execute(
         "SELECT log_chan_id FROM guilds WHERE guild_id = ?", (guild_id,)
     )
     id = cur.fetchall()
-    id = ''.join(map(str,id[0]))        #WHAT THE FUCK DOES THIS EVEN MEAN??
-    id = int(id)
-    return id 
+    try:
+        id = ''.join(map(str,id[0]))        #WHAT THE FUCK DOES THIS EVEN MEAN??
+        id = int(id)
+        return id 
+    except IndexError:
+        return
 
 #Set the scraper channel
 def set_scrape_chan_id(channel_id:int, guild_id:int):
@@ -244,12 +246,13 @@ def get_scrape_channel_id(guild_id: int):
         "SELECT scrape_chan_id FROM guilds WHERE guild_id = ?", (guild_id,)
     )
     id = cur.fetchall()
-    if id == None:
-        return
-    else:
+    #Handle the index being out of range for when the channel isnt assigned just so it doesnt clog my fucking terminal.
+    try:
         id = ''.join(map(str,id[0]))
         id = int(id)
         return id
+    except IndexError: 
+        return
     
 #Set the webhook ID
 def set_webhook_id(webhook_id:int, guild_id:int):
