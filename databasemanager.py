@@ -23,7 +23,7 @@ cur = conn.cursor()
 #Insert a user into the database
 def initiate_user(user_id: int):
     cur.execute(
-        "INSERT INTO users (user_id, level, current_xp, credits, daily_cooldown, theft_cooldown, bank) VALUES (?, 1, 0, 0, 0, 0, 0)", (user_id,))
+        "INSERT INTO users (user_id, user_level, current_xp, credits, daily_cooldown, theft_cooldown, bank) VALUES (?, 1, 0, 0, 0, 0, 0)", (user_id,))
     conn.commit()
 
 #Get a user's current XP
@@ -59,7 +59,7 @@ def get_user_level(user_id: int):
         initiate_user(user_id=user_id) 
  
     cur.execute(
-            "SELECT level FROM users WHERE user_id=?", (user_id,)
+            "SELECT user_level FROM users WHERE user_id=?", (user_id,)
         )
     level = cur.fetchone()
     return level
@@ -68,8 +68,6 @@ def get_user_level(user_id: int):
 #Hopefully this will be able to be used to streamline the code
 #And improve readability
 def get_user_stat(stat_type: str, user_id: int):
-    stat_type = stat_type.lower()
-    
     #If the user isnt in the database, add them.
     querey_user = check_db_for_user(user_id)
     if querey_user is None:
@@ -81,16 +79,13 @@ def get_user_stat(stat_type: str, user_id: int):
     return x
 
 def set_user_stat(stat_type: str, action: str, amount: int, user_id: int):
-    stat_type = stat_type.lower()
-    action = action.lower()
-
     #First, check if the user is in the database.
     querey_user = check_db_for_user(user_id)
     if querey_user is None:
         initiate_user(user_id=user_id)
     
     match stat_type:
-        case "current_xp":
+        case "xp":
             current_xp = get_user_stat("current_xp", user_id)
             if (action == "add"):
                 new_stat_value = current_xp + amount
@@ -100,7 +95,7 @@ def set_user_stat(stat_type: str, action: str, amount: int, user_id: int):
                 new_stat_value = amount
         
         case "level":
-            current_level = get_user_stat("level", user_id)
+            current_level = get_user_stat("user_level", user_id)
             if (action == "add"):
                 new_stat_value = current_level + amount
             elif (action == "remove"):
@@ -163,7 +158,7 @@ def cooldown_left(user_id: int):
 #Shows the leaderboard
 def get_leaderboard():
     cur.execute(
-        "SELECT user_id, level, credits FROM users ORDER BY credits DESC, level DESC LIMIT 10"
+        "SELECT user_id, user_level, credits FROM users ORDER BY credits DESC, user_level DESC LIMIT 10"
     )
     results = cur.fetchall()
     return results
@@ -287,10 +282,10 @@ def generate_case_num():
     new_casenum = recent_case + 1
     return new_casenum
 
-def create_action(user_id:int, guild_id:int, type:str, reason:str, moderator:int, username:str):
+def create_action(user_id:int, guild_id:int, action_type:str, reason:str, moderator:int, username:str):
     case_num = generate_case_num()
     cur.execute(
-        "INSERT INTO actions (user_id, guild_id, type, reason, moderator, casenum, username) VALUES (?, ?, ?, ?, ?, ?, ?)", (user_id, guild_id, type, reason, moderator, case_num, username)
+        "INSERT INTO actions (user_id, guild_id, action_type, reason, moderator, casenum, username) VALUES (?, ?, ?, ?, ?, ?, ?)", (user_id, guild_id, action_type, reason, moderator, case_num, username)
     )
     conn.commit()
 
@@ -301,8 +296,8 @@ def get_case(case_num:int):
     row = cur.fetchone()
 
     if row is not None:
-        user_id, guild_id, type, reason, moderator, casenum, username = row
-        return int(user_id), int(guild_id), type, reason, int(moderator), int(casenum), username
+        user_id, guild_id, action_type, reason, moderator, casenum, username = row
+        return int(user_id), int(guild_id), action_type, reason, int(moderator), int(casenum), username
     
 def get_case_num(user_id):
     cur.execute(

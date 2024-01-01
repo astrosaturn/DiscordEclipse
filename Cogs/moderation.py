@@ -3,6 +3,15 @@ from discord.ext import commands
 from databasemanager import *
 from discord import app_commands
 
+class TestButton(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+    
+    @discord.ui.button(label="TestButton",style=discord.ButtonStyle.red)
+    async def red_button(self, interaction:discord.Interaction, button:discord.ui.Button):
+        await interaction.response.edit_message(content="Success!")
+
+
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -23,7 +32,7 @@ class Moderation(commands.Cog):
                 else:
                     deleted = amount
                     await interaction.channel.purge(limit = amount)
-                    await interaction.channel.send(f'Messages purged by {interaction.user.mention}: `{deleted}`')
+                    await interaction.response.send_message(f'Messages purged by {interaction.user.mention}: `{deleted}`')
             except Exception as e:
                 await interaction.response.send_message(f"I can't purge messages here: {e}", ephemeral=True)
         else:
@@ -113,7 +122,7 @@ class Moderation(commands.Cog):
     #Gets a user's case
     @app_commands.command(name="getcase", description="Gets a user's moderaton case.")
     async def getcase(self, interaction:discord.Interaction, casenumber:int):
-        user_id, guild_id, type, reason, moderator, casenum , username= get_case(case_num=casenumber)
+        user_id, guild_id, action_type, reason, moderator, casenum , username= get_case(case_num=casenumber)
         guild_id = int(guild_id)
         if casenumber != None:
             
@@ -124,7 +133,7 @@ class Moderation(commands.Cog):
                     timestamp=datetime.now()
                 )
                 embed.add_field(name=f"Case #{casenum}", value=f"User ID: {user_id}", inline=False)
-                embed.add_field(name=f"Action: {type}", value=f"**Reason:**\n`{reason}`", inline=False)
+                embed.add_field(name=f"Action: {action_type}", value=f"**Reason:**\n`{reason}`", inline=False)
                 embed.set_footer(text=f"Moderator: {moderator}")
                 await interaction.response.send_message(embed=embed)
             else:
@@ -168,6 +177,11 @@ class Moderation(commands.Cog):
     @app_commands.command(name="pfp", description="temp pfp command. ignore.")
     async def pfp(self, interaction: discord.Interaction):
         await interaction.response.send_message(interaction.user.avatar)
+
+    @app_commands.command(name="button", description="Button testing")
+    async def button(self, interaction: discord.Interaction):
+        await interaction.response.send_message(content="This is a button", view=TestButton())
+
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))

@@ -8,9 +8,32 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.last_member = None
+"""
+class MainMenuButtons(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+    
+    @discord.ui.button(label="Bot Setup ⚙️",style=discord.ButtonStyle.gray)
+    async def red_button(self, interaction:discord.Interaction, button:discord.ui.Button):
+        await interaction.response.edit_message(content="Success!")
+
+
+@app_commands.command(name="help", description="Sends a help menu with interactive buttons for navigation.")
+async def help(self, interaction:discord.Interaction):
+    embed = discord.Embed(
+                title="Bot Setup Menu",
+                colour=0x94ff5e,
+                timestamp=datetime.now()          
+            )
+    embed.add_field(name="/setlogchannel [id]", value="This command will tell me where I send my logs.")
+    embed.add_field(name="/removelogchannel", value="This command removes the log channel.")
+    embed.add_field(name="/setscraperchannel", value="This command must be sent in the channel you want. This sets my message logging channel.")
+    embed.add_field(name="/deletescraperchannel", value="This command removes the scraper channel.")
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+"""
 
 #Figure out how to use buttons
-    """
+"""
     @app_commands.command(name="help", description="Show a list of useable commands.")
     async def help(self, interaction: discord.Interaction):
         button0 = Button(label="Moderation commands")
@@ -34,9 +57,9 @@ class Help(commands.Cog):
         button1.callback = button_callback
 
         interaction = await self.bot.wait_for("button_click", check=lambda i: i.message == main_menu)
-    """
-    @app_commands.command(name="help", description="Querey commands and their specific usages!")
-    async def help(self, interaction: discord.Interaction, query: str = None):
+
+@app_commands.command(name="help", description="Querey commands and their specific usages!")
+async def help(self, interaction: discord.Interaction, query: str = None):
         #Make the ephemeral to prevent spam
         if query == None:
             embed = discord.Embed(
@@ -109,7 +132,7 @@ class Help(commands.Cog):
 
 
 
-
+"""
 
 async def setup(bot):
     await bot.add_cog(Help(bot))
