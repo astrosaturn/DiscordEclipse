@@ -31,7 +31,6 @@ class Moderation(commands.Cog):
                     await interaction.response.send_message('You must input a number!', ephemeral=True)
                 else:
                     deleted = amount
-                    interaction_channel = interaction.channel
                     await interaction.response.send_message("Purging..") # Do this or you get an ugly "The application did not respond" message 
                     await interaction.channel.purge(limit = amount)
                     await interaction.channel.send(f"Messages purged by {interaction.user.mention}: `{deleted}`")
