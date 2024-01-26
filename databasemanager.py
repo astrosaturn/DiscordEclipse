@@ -94,7 +94,7 @@ def set_user_stat(stat_type: str, action: str, amount: int, user_id: int): # <--
             else:
                 new_stat_value = amount
         
-        case "level":
+        case "user_level":
             current_level = get_user_stat("user_level", user_id)
             if (action == "add"):
                 new_stat_value = current_level + amount

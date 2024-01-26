@@ -20,6 +20,8 @@ class MainMenuButtons(discord.ui.View):
 
 @app_commands.command(name="help", description="Sends a help menu with interactive buttons for navigation.")
 async def help(self, interaction:discord.Interaction):
+    await interaction.response.send_message("WIP")
+
     embed = discord.Embed(
                 title="Bot Setup Menu",
                 colour=0x94ff5e,
