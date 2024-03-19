@@ -5,6 +5,7 @@ from databasemanager import *
 from discord import app_commands
 from datetime import datetime
 import json
+import textwrap
 import openai
 import os
 import time
@@ -123,6 +124,7 @@ class Fun(commands.Cog):
     @app_commands.command(name="chatgpt", description="Send a query to ChatGPT!")
     async def chatgpt(self, interaction: discord.Interaction, query: str):
         if len(query) < 256:
+            interaction_channel = interaction.channel_id
             await interaction.response.defer()
             def get_completion(prompt, model="gpt-3.5-turbo"):
                 messages = [{"role": "user", "content": prompt}]
@@ -134,13 +136,23 @@ class Fun(commands.Cog):
                 return response.choices[0].message["content"]
             response = get_completion(query)
             msg = await interaction.original_response()
+
+            out = [(response[i:i+255]) for i in range(0, len(response), 255)]
+
             embed = discord.Embed(
                 colour=0xfc8c03,
                 timestamp=datetime.now()
             )
-            embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT: "{response}"')
+            embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT:\n "{out[0]}"')
             embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
             await msg.edit(embed=embed)
+            if len(response) > 2:
+                for i in range(len(out)):
+                    embedcont = discord.Embed(
+                        colour=0xfc8c03
+                    )
+                    embedcont.add_field(name=' ', value=f"{out[i + 1]}")
+                    await interaction.channel.send(embed=embedcont)     
         else:
             await interaction.response.send_message("Your query must be under 256 characters!")
             
