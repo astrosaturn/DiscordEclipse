@@ -199,8 +199,6 @@ def check_db_for_guild(guild_id: int):
     else:
         return None
 
-
-
 #Set a guild's log channel
 def set_log_channel(channel_id: int, guild_id: int):
     #Check the DB for the guild
@@ -278,14 +276,17 @@ def generate_case_num():
         "SELECT MAX(casenum) FROM actions"
     )
     recent_case = cur.fetchone()
-    if recent_case == None:
-        recent_case = 0
-    else:
-        recent_case = int(recent_case[0])
-    new_casenum = recent_case + 1
+    try:
+        caught_case = int(recent_case[0])
+    except:
+        caught_case = 0
+    new_casenum = caught_case + 1
     return new_casenum
 
 def create_action(user_id:int, guild_id:int, action_type:str, reason:str, moderator:int, username:str):
+    querey_user = check_db_for_user(user_id)
+    if querey_user == None:
+        initiate_user(user_id)
     case_num = generate_case_num()
     cur.execute(
         "INSERT INTO actions (user_id, guild_id, action_type, reason, moderator, casenum, username) VALUES (?, ?, ?, ?, ?, ?, ?)", (user_id, guild_id, action_type, reason, moderator, case_num, username)
@@ -299,8 +300,9 @@ def get_case(case_num:int):
     row = cur.fetchone()
 
     if row is not None:
-        user_id, guild_id, action_type, reason, moderator, casenum, username = row
-        return int(user_id), int(guild_id), action_type, reason, int(moderator), int(casenum), username
+        casenum, user_id, guild_id, action_type, reason, moderator, username = row 
+        print(f"{reason} | {str(reason)}")
+        return int(casenum), int(user_id), int(guild_id), str(action_type), str(reason), int(moderator), str(username)
     
 def get_case_num(user_id):
     cur.execute(

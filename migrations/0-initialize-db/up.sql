@@ -1,3 +1,5 @@
+USE eclipsedatabase;
+
 CREATE TABLE actions
 (
     casenum         INT             NOT NULL PRIMARY KEY,
