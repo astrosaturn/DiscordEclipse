@@ -44,8 +44,8 @@ class Moderation(commands.Cog):
                 else:
                     create_action(target.id,interaction.guild_id,"Warn",reason,interaction.user.id,target.name)
                     case_number = get_case_num(target.id)
-                    await interaction.response.send_message(f"{target.name} has been warned for {reason}. Case #{case_number}", ephemeral=True)
                     await target.send(f"You have been warned in {interaction.guild.name} by {interaction.user.name} for:\n\"{reason}\"")
+                    await interaction.response.send_message(f"{target.name} has been warned for {reason}. Case #{case_number}", ephemeral=True)
             except Exception as e:
                 await interaction.response.send_message(f"Unable to warn user: {e}")
         else:
