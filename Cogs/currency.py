@@ -134,11 +134,11 @@ class Currency(commands.Cog):
                 # I am aware this is OP.
                 if w > z:
                     winnings = amount * 2
-                    set_user_stat("credtis", "add", winnings, interaction.user.id)
+                    set_user_stat("credits", "add", winnings, interaction.user.id)
                     new_bal = get_user_stat("credits", interaction.user.id)
                     embed.add_field(name="And wins!", value=f"{interaction.user.mention} has won `{winnings}` credits.\n Their balance is now `{new_bal}`.")
                 else:
-                    set_user_stat("credtis", "remove", amount, interaction.user.id)
+                    set_user_stat("credits", "remove", amount, interaction.user.id)
                     new_bal = get_user_stat("credits", interaction.user.id)
                     embed.add_field(name="And loses.", value=f"{interaction.user.mention} has lost `{amount}` credits.\n Their new balance is `{new_bal}`.")
                 

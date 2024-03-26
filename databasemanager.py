@@ -293,6 +293,8 @@ def create_action(user_id:int, guild_id:int, action_type:str, reason:str, modera
     )
     conn.commit()
 
+    
+
 def get_case(case_num:int):
     cur.execute(
         "SELECT * FROM actions WHERE casenum = ?", (case_num,)

@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from databasemanager import *
 from discord import app_commands
+import threading
+import time
 
 class TestButton(discord.ui.View):
     def __init__(self):
@@ -11,7 +13,9 @@ class TestButton(discord.ui.View):
     async def red_button(self, interaction:discord.Interaction, button:discord.ui.Button):
         await interaction.response.edit_message(content="Success!")
 
+def check_mute_timers():
 
+    return
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -21,6 +25,31 @@ class Moderation(commands.Cog):
     @commands.Cog.listener()
     async def on_ready():
         print("Moderation cog ready.")
+
+    @app_commands.command(name="mute", description="Mutes a user for X time.")
+    async def mute(self, interaction: discord.Interaction, target:discord.Member, amount:int = None, reason:str = None):
+        return
+
+
+    @app_commands.command(name="warn", description="Makes a case against the user as a warn.")
+    async def warn(self, interaction:discord.Interaction, target:discord.Member, reason:str = None):
+        if interaction.user.guild_permissions.manage_messages:
+            try:
+                if reason is None:
+                    reason = "No reason"
+                    create_action(target.id,interaction.guild_id,"Warn",reason,interaction.user.id,target.name)
+                    case_number = get_case_num(target.id)
+                    await interaction.response.send_message(f"{target.name} has been warned. Case #{case_number}", ephemeral=True)
+                    await target.send(f"You have been warned in {interaction.guild.name} by {interaction.user.name}.")
+                else:
+                    create_action(target.id,interaction.guild_id,"Warn",reason,interaction.user.id,target.name)
+                    case_number = get_case_num(target.id)
+                    await interaction.response.send_message(f"{target.name} has been warned for {reason}. Case #{case_number}", ephemeral=True)
+                    await target.send(f"You have been warned in {interaction.guild.name} by {interaction.user.name} for:\n\"{reason}\"")
+            except Exception as e:
+                await interaction.response.send_message(f"Unable to warn user: {e}")
+        else:
+            await interaction.response.send_message(f"{interaction.user.mention} you do not have permission to use this command.")
 
     #Purge command
     @app_commands.command(name="purge", description="Removes x amount of messages")
