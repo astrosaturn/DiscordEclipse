@@ -30,25 +30,28 @@ class Scraper(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):        
         if message.author.id != 485057961358524427 and message.author.id != 1081004946872352958:
-            if get_scrape_channel_id(message.guild.id):
-                webhook_id = get_webhook_id(message.guild.id)
-                channel_id = message.channel.id
-                webhook_ref = await self.bot.fetch_webhook(webhook_id)
-                webhook_url = webhook_ref.url
-                webhook = SyncWebhook.from_url(str(webhook_url))
+            try:
+                if get_scrape_channel_id(message.guild.id):
+                    webhook_id = get_webhook_id(message.guild.id)
+                    channel_id = message.channel.id
+                    webhook_ref = await self.bot.fetch_webhook(webhook_id)
+                    webhook_url = webhook_ref.url
+                    webhook = SyncWebhook.from_url(str(webhook_url))
 
-                if message.webhook_id != None:
-                    return
-                
+                    if message.webhook_id != None:
+                        return
+                    
+                    else:
+                        attachments = ""
+                        if len(message.attachments):
+                            for attachment in message.attachments:
+                                attachments += f"\n{attachment.url}"
+                        content=f"[ [Jump]({message.jump_url}) | <#{channel_id}> | {message.author.id} ] \n {message.content} {attachments}"
+                        webhook.send(content=content, avatar_url=message.author.avatar, username=message.author.name)
                 else:
-                    attachments = ""
-                    if len(message.attachments):
-                        for attachment in message.attachments:
-                            attachments += f"\n{attachment.url}"
-                    content=f"[ [Jump]({message.jump_url}) | <#{channel_id}> | {message.author.id} ] \n {message.content} {attachments}"
-                    webhook.send(content=content, avatar_url=message.author.avatar, username=message.author.name)
-            else:
-                return
+                    return
+            except:
+                pass
         else:
             return
 

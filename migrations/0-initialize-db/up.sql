@@ -1,3 +1,5 @@
+USE eclipsedatabase;
+
 CREATE TABLE actions
 (
     casenum         INT             NOT NULL PRIMARY KEY,
@@ -14,7 +16,8 @@ CREATE TABLE guilds
     guild_id        BIGINT          NOT NULL PRIMARY KEY,
     log_chan_id     BIGINT,
     scrape_chan_id  BIGINT,
-    scraper_wh_id   BIGINT
+    scraper_wh_id   BIGINT,
+    mute_role_id    BIGINT
 );
 
 CREATE TABLE users
@@ -27,4 +30,11 @@ CREATE TABLE users
     theft_cooldown  BIGINT,
     bank            BIGINT,
     cases           INT
+);
+
+CREATE TABLE muted_users
+(
+    user_id         BIGINT         NOT NULL PRIMARY KEY,
+    mute_expiration BIGINT         NOT NULL,
+    guild_id        BIGINT         NOT NULL
 );

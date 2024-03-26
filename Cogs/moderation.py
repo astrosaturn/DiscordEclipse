@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from databasemanager import *
 from discord import app_commands
+import threading
+import time
 
 class TestButton(discord.ui.View):
     def __init__(self):
@@ -11,7 +13,9 @@ class TestButton(discord.ui.View):
     async def red_button(self, interaction:discord.Interaction, button:discord.ui.Button):
         await interaction.response.edit_message(content="Success!")
 
+def check_mute_timers():
 
+    return
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
@@ -21,6 +25,31 @@ class Moderation(commands.Cog):
     @commands.Cog.listener()
     async def on_ready():
         print("Moderation cog ready.")
+
+    @app_commands.command(name="mute", description="Mutes a user for X time.")
+    async def mute(self, interaction: discord.Interaction, target:discord.Member, amount:int = None, reason:str = None):
+        return
+
+
+    @app_commands.command(name="warn", description="Makes a case against the user as a warn.")
+    async def warn(self, interaction:discord.Interaction, target:discord.Member, reason:str = None):
+        if interaction.user.guild_permissions.manage_messages:
+            try:
+                if reason is None:
+                    reason = "No reason"
+                    create_action(target.id,interaction.guild_id,"Warn",reason,interaction.user.id,target.name)
+                    case_number = get_case_num(target.id)
+                    await interaction.response.send_message(f"{target.name} has been warned. Case #{case_number}", ephemeral=True)
+                    await target.send(f"You have been warned in {interaction.guild.name} by {interaction.user.name}.")
+                else:
+                    create_action(target.id,interaction.guild_id,"Warn",reason,interaction.user.id,target.name)
+                    case_number = get_case_num(target.id)
+                    await target.send(f"You have been warned in {interaction.guild.name} by {interaction.user.name} for:\n\"{reason}\"")
+                    await interaction.response.send_message(f"{target.name} has been warned for {reason}. Case #{case_number}", ephemeral=True)
+            except Exception as e:
+                await interaction.response.send_message(f"Unable to warn user: {e}")
+        else:
+            await interaction.response.send_message(f"{interaction.user.mention} you do not have permission to use this command.")
 
     #Purge command
     @app_commands.command(name="purge", description="Removes x amount of messages")
@@ -124,24 +153,29 @@ class Moderation(commands.Cog):
     #Gets a user's case
     @app_commands.command(name="getcase", description="Gets a user's moderaton case.")
     async def getcase(self, interaction:discord.Interaction, casenumber:int):
-        user_id, guild_id, action_type, reason, moderator, casenum , username= get_case(case_num=casenumber)
-        guild_id = int(guild_id)
-        if casenumber != None:
-            
-            if guild_id == interaction.guild.id:
-                embed = discord.Embed(
-                    title=f"User: {username}",
-                    colour=0xed5f5a,
-                    timestamp=datetime.now()
-                )
-                embed.add_field(name=f"Case #{casenum}", value=f"User ID: {user_id}", inline=False)
-                embed.add_field(name=f"Action: {action_type}", value=f"**Reason:**\n`{reason}`", inline=False)
-                embed.set_footer(text=f"Moderator: {moderator}")
-                await interaction.response.send_message(embed=embed)
+        try:
+            casenum, user_id, guild_id, action_type, reason, moderator, username = get_case(case_num=casenumber)
+            reason = str(reason)
+            guild_id = int(guild_id)
+            if casenumber != None:
+                if guild_id == interaction.guild.id:
+                    embed = discord.Embed(
+                        title=f"User: {username}",
+                        colour=0xed5f5a,
+                        timestamp=datetime.now()
+                    )
+                    embed.add_field(name=f"Case #{casenum}", value=f"User ID: {user_id}", inline=False)
+                    embed.add_field(name=f"Action: {action_type}", value=f"**Reason:**\n`{reason}`", inline=False)
+                    embed.set_footer(text=f"Moderator: {moderator}")
+                    await interaction.response.send_message(embed=embed)
+                else:
+                    await interaction.response.send_message(f"Sorry, this case {guild_id} is not from this guild {interaction.guild.id}.")
             else:
-                await interaction.response.send_message(f"Sorry, this case {guild_id} is not from this guild {interaction.guild.id}.")
-        else:
-            await interaction.response.send_message("You must input a case number!")
+                await interaction.response.send_message("You must input a case number!")
+        except Exception as e:
+            await interaction.response.send_message(f"Casenumber `{casenumber}` does not exist.")
+            target = interaction.guild.get_member(345683515528183808)
+            await target.send(e)
 
     @commands.command()
     async def setstat(self, ctx, user:discord.User, action: str, stat: str, value: int):
