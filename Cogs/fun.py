@@ -137,15 +137,27 @@ class Fun(commands.Cog):
             response = get_completion(query)
             msg = await interaction.original_response()
 
-            out = [(response[i:i+255]) for i in range(0, len(response), 255)]
+            # This only applies if you are using the multiple embeds
+            # out = [(response[i:i+255]) for i in range(0, len(response), 255)]
 
             embed = discord.Embed(
                 colour=0xfc8c03,
                 timestamp=datetime.now()
             )
-            embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT:\n "{out[0]}"')
-            embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
-            await msg.edit(embed=embed)
+
+            if (len(response) < 256):
+                embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT:\n {response}')
+                embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
+                await msg.edit(embed=embed)
+            else:
+                with open("response.txt", "w") as f:
+                    f.write(str(response))
+                file = discord.File("response.txt")
+                await msg.edit(content="Response was too large, sending in a file format:")
+                await interaction.channel.send(file=file)
+
+            # Figure out a way to have it truncate at whitespace
+            """ 
             if len(response) > 2:
                 for i in range(len(out)):
                     embedcont = discord.Embed(
@@ -153,6 +165,7 @@ class Fun(commands.Cog):
                     )
                     embedcont.add_field(name=' ', value=f"{out[i + 1]}")
                     await interaction.channel.send(embed=embedcont)     
+            """
         else:
             await interaction.response.send_message("Your query must be under 256 characters!")
             
