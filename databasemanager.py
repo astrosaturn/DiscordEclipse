@@ -28,8 +28,8 @@ def initiate_user(user_id: int):
 
 #Get a user's current XP
 def get_user_xp(user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
+    query_user = check_db_for_user(user_id)
+    if query_user is None:
         initiate_user(user_id=user_id) 
 
     cur.execute(
@@ -54,8 +54,8 @@ def check_db_for_user(user_id: int):
 
 #Get the user's current level
 def get_user_level(user_id: int):
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
+    query_user = check_db_for_user(user_id)
+    if query_user is None:
         initiate_user(user_id=user_id) 
  
     cur.execute(
@@ -69,8 +69,8 @@ def get_user_level(user_id: int):
 #And improve readability
 def get_user_stat(stat_type: str, user_id: int):
     #If the user isnt in the database, add them.
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
+    query_user = check_db_for_user(user_id)
+    if query_user is None:
         initiate_user(user_id=user_id)
     
     cur.execute(f"SELECT {stat_type} FROM users WHERE user_id = ?", (user_id,))
@@ -80,8 +80,8 @@ def get_user_stat(stat_type: str, user_id: int):
 
 def set_user_stat(stat_type: str, action: str, amount: int, user_id: int): # <--- This function is only used internally and by one command that is only useable by a developer.
     #First, check if the user is in the database.                                 It is also impossible to SQL inject into because of the checks it does so it wouldnt matter anyways.
-    querey_user = check_db_for_user(user_id)
-    if querey_user is None:
+    query_user = check_db_for_user(user_id)
+    if query_user is None:
         initiate_user(user_id=user_id)
     
     match stat_type:
@@ -183,7 +183,7 @@ def set_theft_cooldown(amount: int, user_id: int):
 #Initiate a guild into the DB
 def init_guild(guild_id: int):
     cur.execute(
-        "INSERT INTO guilds (guild_id, log_chan_id, scrape_chan_id, scraper_wh_id) VALUES (?, 0, 0, 0)", (guild_id,)
+        "INSERT INTO guilds (guild_id, log_chan_id, scrape_chan_id, scraper_wh_id, mute_role_id) VALUES (?, 0, 0, 0, NULL)", (guild_id,)
     )
     conn.commit()
 
@@ -284,8 +284,8 @@ def generate_case_num():
     return new_casenum
 
 def create_action(user_id:int, guild_id:int, action_type:str, reason:str, moderator:int, username:str):
-    querey_user = check_db_for_user(user_id)
-    if querey_user == None:
+    query_user = check_db_for_user(user_id)
+    if query_user == None:
         initiate_user(user_id)
     case_num = generate_case_num()
     cur.execute(
@@ -313,3 +313,27 @@ def get_case_num(user_id):
     case_num = cur.fetchone()
     case_num = int(case_num[0])
     return case_num
+
+#Muted users table
+def create_mute(user_id: int, duration, guild_id: int):
+    query_user = check_db_for_user(user_id)
+    query_guild = check_db_for_guild(guild_id)
+
+    if query_user == None:
+        initiate_user(user_id)
+
+    if query_guild == None:
+        init_guild(guild_id)
+    
+    #The duration will be a unix timestamp.
+    if duration == 0 or None:
+        #Assume its permanent..
+        duration = "Permanent"
+
+
+
+
+    cur.execute(
+        f"INSERT INTO muted_users (user_id, mute_expiration, guild_id) VALUES ({user_id}, {duration}, {guild_id})"
+    )
+    conn.commit()
