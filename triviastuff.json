@@ -1,0 +1,252 @@
+[
+    {
+        "question": "What is the capital of France?",
+        "options": ["Paris", "Madrid", "Rome", "Berlin"],
+        "answer": ["Paris", 1]
+    },
+    {
+        "question": "Which planet is known as the Red Planet?",
+        "options": ["Mars", "Venus", "Titan", "Jupiter"],
+        "answer": ["Mars", "1"]
+    },
+    {
+        "question": "What is the largest mammal?",
+        "options": ["Blue Whale", "Elephant", "Giraffe", "Lion"],
+        "answer": ["Blue Whale", "1"]
+    },
+    {
+        "question": "What shark has a tail length that is equal to the length of its body?",
+        "options": ["Tiger Shark", "Great White Shark", "Megalodon Shark", "Thresher Shark"],
+        "answer": ["Thresher Shark", "4"]
+    },
+    {
+        "question": "Which gas do plants absorb from the atmosphere during photosynthesis?",
+        "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+        "answer": ["Carbon Dioxide", "2"]
+    },
+    {
+        "question": "Who wrote the play 'Romeo and Juliet'?",
+        "options": ["William Wordsworth", "George Orwell", "William Shakespeare", "Charles Dickens"],
+        "answer": ["William Shakespeare", "1"]
+    },
+    {
+        "question": "What is the chemical symbol for gold?",
+        "options": ["Go", "Au", "Ag", "Ge"],
+        "answer": ["Au", "2"]
+    },
+    {
+        "question": "Which country is known as the Land of the Rising Sun?",
+        "options": ["China", "South Korea", "Japan", "Vietnam"],
+        "answer": ["Japan", "3"]
+    },
+    {
+        "question": "What is the largest organ in the human body?",
+        "options": ["Heart", "Brain", "Liver", "Skin"],
+        "answer": ["Skin", "4"]
+    },
+    {
+        "question": "In which year did Christopher Columbus first reach the Americas?",
+        "options": ["1492", "1607", "1776", "1865"],
+        "answer": ["1492", "1"]
+    },
+    {
+        "question": "What is the chemical symbol for water?",
+        "options": ["H2O", "CO2", "O2", "N2"],
+        "answer": ["H2O", "1"]
+    },
+    {
+        "question": "Which planet is known as the 'Morning Star' or 'Evening Star'?",
+        "options": ["Mars", "Venus", "Jupiter", "Saturn"],
+        "answer": ["Venus", "2"]
+    },
+    {
+        "question": "Which gas makes up the majority of Earth's atmosphere?",
+        "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+        "answer": ["Nitrogen", "3"]
+    },
+    {
+        "question": "Who is the author of 'To Kill a Mockingbird'?",
+        "options": ["Harper Lee", "J.K. Rowling", "F. Scott Fitzgerald", "George Orwell"],
+        "answer": ["Harper Lee", "1"]
+    },
+    {
+        "question": "What is the largest planet in our solar system?",
+        "options": ["Mars", "Earth", "Jupiter", "Venus"],
+        "answer": ["Jupiter", "3"]
+    },
+    {
+        "question": "What is the chemical symbol for iron?",
+        "options": ["Ir", "Fe", "Au", "Ag"],
+        "answer": ["Fe", "2"]
+    },
+    {
+        "question": "In which year did the Titanic sink?",
+        "options": ["1907", "1912", "1921", "1935"],
+        "answer": ["1912", "2"]
+    },
+    {
+        "question": "Which country is known as the 'Land of the Midnight Sun'?",
+        "options": ["Russia", "Canada", "Norway", "Sweden"],
+        "answer": ["Norway", "3"]
+    },
+    {
+        "question": "What is the largest species of shark?",
+        "options": ["Hammerhead Shark", "Great White Shark", "Whale Shark", "Tiger Shark"],
+        "answer": ["Whale Shark", "3"]
+    },
+    {
+        "question": "Who painted the Mona Lisa?",
+        "options": ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Michelangelo"],
+        "answer": ["Leonardo da Vinci", "1"]
+    },
+    {
+        "question": "What is the tallest mammal?",
+        "options": ["Elephant", "Giraffe", "Horse", "Lion"],
+        "answer": ["Giraffe", "2"]
+    },
+    {
+        "question": "Who is known as the 'Father of Geometry'?",
+        "options": ["Aristotle", "Pythagoras", "Euclid", "Archimedes"],
+        "answer": ["Euclid", "3"]
+    },
+    {
+        "question": "Which planet is closest to the Sun?",
+        "options": ["Mercury", "Venus", "Earth", "Mars"],
+        "answer": ["Mercury", "1"]
+    },
+    {
+        "question": "What is the primary ingredient in guacamole?",
+        "options": ["Tomato", "Avocado", "Onion", "Lime"],
+        "answer": ["Avocado", "2"]
+    },
+    {
+        "question": "Who wrote 'The Catcher in the Rye'?",
+        "options": ["J.D. Salinger", "Ernest Hemingway", "F. Scott Fitzgerald", "Mark Twain"],
+        "answer": ["J.D. Salinger", "1"]
+    },
+    {
+        "question": "Which bird is known for its ability to mimic human speech?",
+        "options": ["Eagle", "Owl", "Parrot", "Penguin"],
+        "answer": ["Parrot", "3"]
+    },
+    {
+        "question": "What is the largest continent by land area?",
+        "options": ["North America", "Africa", "Asia", "Europe"],
+        "answer": ["Asia", "3"]
+    },
+    {
+        "question": "What is the chemical symbol for silver?",
+        "options": ["Si", "Ag", "Au", "Fe"],
+        "answer": ["Ag", "2"]
+    },
+    {
+        "question": "In Greek mythology, who was the goddess of wisdom?",
+        "options": ["Aphrodite", "Hera", "Athena", "Artemis"],
+        "answer": ["Athena", "3"]
+    },
+    {
+        "question": "What is the largest desert in the world?",
+        "options": ["Sahara Desert", "Gobi Desert", "Antarctic Desert", "Arabian Desert"],
+        "answer": ["Antarctic Desert", "3"]
+    },
+    {
+        "question": "Who was the first woman to win a Nobel Prize?",
+        "options": ["Marie Curie", "Rosalind Franklin", "Mother Teresa", "Dorothy Hodgkin"],
+        "answer": ["Marie Curie", "1"]
+    },
+    {
+        "question": "What is the capital of Australia?",
+        "options": ["Sydney", "Melbourne", "Canberra", "Perth"],
+        "answer": ["Canberra", "3"]
+    },
+    {
+        "question": "Which planet is known as the 'Blue Marble'?",
+        "options": ["Mars", "Earth", "Uranus", "Neptune"],
+        "answer": ["Earth", "2"]
+    },
+    {
+        "question": "What is the chemical symbol for sodium?",
+        "options": ["So", "S", "Na", "N"],
+        "answer": ["Na", "3"]
+    },
+    {
+        "question": "In which country were the Olympic Games originated?",
+        "options": ["Greece", "Italy", "Egypt", "China"],
+        "answer": ["Greece", "1"]
+    },
+    {
+        "question": "What is the hardest natural substance on Earth?",
+        "options": ["Iron", "Diamond", "Quartz", "Platinum"],
+        "answer": ["Diamond", "2"]
+    },
+    {
+        "question": "Who discovered penicillin?",
+        "options": ["Alexander Fleming", "Louis Pasteur", "Marie Curie", "Robert Koch"],
+        "answer": ["Alexander Fleming", "1"]
+    },
+    {
+        "question": "What is the chemical symbol for potassium?",
+        "options": ["K", "Pt", "P", "Po"],
+        "answer": ["K", "1"]
+    },
+    {
+        "question": "What is the smallest bone in the human body?",
+        "options": ["Stapes", "Femur", "Radius", "Tibia"],
+        "answer": ["Stapes", "1"]
+    },
+    {
+        "question": "Who painted 'The Starry Night'?",
+        "options": ["Pablo Picasso", "Claude Monet", "Vincent van Gogh", "Salvador Dali"],
+        "answer": ["Vincent van Gogh", "3"]
+    },
+    {
+        "question": "What is the chemical symbol for helium?",
+        "options": ["He", "H", "Hy", "Ho"],
+        "answer": ["He", "1"]
+    },
+    {
+        "question": "Which planet is known as the 'Giant of the Solar System'?",
+        "options": ["Saturn", "Jupiter", "Uranus", "Neptune"],
+        "answer": ["Jupiter", "2"]
+    },
+    {
+        "question": "What is the largest bone in the human body?",
+        "options": ["Femur", "Tibia", "Humerus", "Radius"],
+        "answer": ["Femur", "1"]
+    },
+    {
+        "question": "Who wrote 'The Great Gatsby'?",
+        "options": ["F. Scott Fitzgerald", "Ernest Hemingway", "John Steinbeck", "Virginia Woolf"],
+        "answer": ["F. Scott Fitzgerald", "1"]
+    },
+    {
+        "question": "What is the chemical symbol for carbon?",
+        "options": ["Ca", "C", "Co", "Cu"],
+        "answer": ["C", "2"]
+    },
+    {
+        "question": "Which country is known as the 'Land of a Thousand Lakes'?",
+        "options": ["Finland", "Sweden", "Canada", "Russia"],
+        "answer": ["Finland", "1"]
+    },
+    {
+        "question": "What is the rarest blood type in humans?",
+        "options": ["O", "AB", "B", "A"],
+        "answer": ["AB", "2"]
+    },
+    {
+        "question": "Who wrote '1984'?",
+        "options": ["Aldous Huxley", "Ray Bradbury", "George Orwell", "H.G. Wells"],
+        "answer": ["George Orwell", "3"]
+    },
+    {
+        "question": "What is the chemical symbol for nitrogen?",
+        "options": ["Ni", "N", "Ne", "Na"],
+        "answer": ["N", "2"]
+    },
+    {
+        "question": "What is the largest ocean on Earth?",
+        "options": ["Indian Ocean", "Atlantic Ocean", "Arctic Ocean", "Pacific Ocean"],
+        "answer": ["Pacific Ocean", "4"]
+    }
+]
