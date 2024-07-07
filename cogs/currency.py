@@ -5,7 +5,6 @@ from databasemanager import *
 from datetime import datetime
 from random import randint
 import math
-from typing import Literal
 
 class Currency(commands.Cog):
     def __init__(self, bot):
@@ -17,7 +16,7 @@ class Currency(commands.Cog):
         print("Currency cog ready.")
 
     @app_commands.command(name="transfer", description="Transfer some of your credits to someone else")
-    async def transfer(self, interaction: discord.Interaction, amount: int, target: discord.User):        
+    async def trasnfer(self, interaction: discord.Interaction, amount: int, target: discord.User):        
         author_balance = get_user_stat("credits", interaction.user.id)
 
         if author_balance >= amount:
@@ -149,25 +148,27 @@ class Currency(commands.Cog):
 
 
     @app_commands.command(name="bank", description="Make withdrawls or deposits in your bank account!")
-    async def bank(self, interaction:discord.Interaction, action: Literal['Deposit', 'Withdraw'], amount: int):
+    async def bank(self, interaction:discord.Interaction, action: str, amount: int):
         user_id = interaction.user.id
         user_balance = get_user_stat("credits", interaction.user.id)
-        current_bank_balance = get_user_stat("bank", user_id)
 
         if amount > 0:
-            if action == "Withdraw":
+            current_bank_balance = get_user_stat("bank", user_id)
+            if action.lower() == "withdraw":
                 if current_bank_balance > 0:
-                    set_user_stat("bank", "remove", amount, user_id)
+                    withdraw_balance = current_bank_balance - amount
+                    set_user_stat("bank", "remove", withdraw_balance, user_id)
                     set_user_stat("credits", "add", amount, user_id)
-                    await interaction.response.send_message(f"{amount} credits have been withdrawed from your account. You now have {current_bank_balance - amount} credits in your bank.")
+                    await interaction.response.send_message(f"{amount} credits have been withdrawed from your account. You now have {withdraw_balance} credits in your bank.")
                 else:
-                    await interaction.response.send_message("Can't withdraw if you have nothing to withdraw.")
+                    await interaction.response.send_message("Can't withdraw if you have nothing to withdraw. Broke ass.")
                 
-            elif action == "Deposit":
+            elif action.lower() == "deposit":
                 if user_balance > 0:
-                    set_user_stat("bank", "add", amount, user_id)
+                    deposit_balance = current_bank_balance + amount
+                    set_user_stat("bank", "add", deposit_balance, user_id)
                     set_user_stat("credits", "remove", amount, user_id)
-                    await interaction.response.send_message(f"{amount} credits have been deposited. Your bank balance is {current_bank_balance + amount} credits.")
+                    await interaction.response.send_message(f"{amount} credits have been deposited. Your bank balance is {deposit_balance} credits.")
                 else:
                     await interaction.response.send_message("Can't deposit if you have nothing to deposit. Broke ass")
 
