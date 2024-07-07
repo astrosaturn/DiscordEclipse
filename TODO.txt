@@ -1,2 +1,4 @@
 - Finish currency system
 - Add more games
+- Add a shop
+- Russian Roulette

@@ -4,6 +4,7 @@ from databasemanager import *
 from discord import app_commands
 from datetime import datetime
 import asyncio 
+from typing import Literal
 
 activated = False
 """
@@ -106,13 +107,23 @@ class Moderation(commands.Cog):
     
     #Ban command
     @app_commands.command(name="ban", description="Bans a selected user.")
-    async def ban(self, interaction: discord.Interaction, user:discord.Member,*,reason:str = None):
+    @app_commands.describe(anonymous="If the user will see your username in the ban message")
+    async def ban(self, interaction: discord.Interaction, user: discord.Member, reason: str = "No reason", *, anonymous: Literal['true', 'false'] = 'true'):
         if interaction.user.guild_permissions.ban_members:
             if user is not None:
-                create_action(user.id,interaction.guild.id,"Ban",reason,interaction.user.id,user.name)
-                case_num = get_case_num(user_id= user.id)
-                await user.send(f'You have been banned by <@{interaction.user.id}> from "{interaction.guild.name}" for: **{reason}**.')               
-                await user.ban(reason=reason)
+                create_action(user.id, interaction.guild.id, "Ban", reason, interaction.user.id, user.name)
+                case_num = get_case_num(user_id=user.id)
+                
+                try:
+                    if anonymous == "true":
+                        await user.send(f'You have been banned from "{interaction.guild.name}" for: **{reason}**.')
+                    else:
+                        await user.send(f'You have been banned from "{interaction.guild.name}" by {interaction.user.global_name} for: **{reason}**.')
+                    await user.ban(reason=reason)
+                except Exception as e:
+                    print(f"An error has occurred: {e}")
+                    await interaction.response.send_message(f"An error has occurred.", ephemeral=True)
+                    return 
 
                 channel = get_log_channel(interaction.guild.id)
                 channel = self.bot.get_channel(channel)
@@ -121,15 +132,18 @@ class Moderation(commands.Cog):
                     colour=0x855a0c,
                     timestamp=datetime.now()
                 )
+                if channel is not None:
+                    await channel.send(embed=embed)
                 embed.add_field(name="Reason:", value=reason, inline=False)
                 embed.add_field(name="Duration:", value="To be implemented.", inline=False)
                 embed.set_footer(text=f"Moderator: {interaction.user.name}", icon_url=interaction.user.avatar.url)
-                await channel.send(embed=embed)
-                await interaction.response.send_message(f'{user} has been banned for the reason: `{reason}` | Case #{case_num}', ephemeral=True)
+                await interaction.response.send_message(f'{user} has been banned for the reason: `{reason}` | Case #{case_num}')
             else:
                 await interaction.response.send_message(f"{interaction.user.mention}, you must select a valid user!", ephemeral=True)
         else:
             await interaction.response.send_message(f"You do not have permissions to use this command.", ephemeral=True)
+
+
 
     #Slowmode command
     @app_commands.command(name="slowmode", description="Sets the current channel to slowmode for x seconds")
@@ -220,7 +234,26 @@ class Moderation(commands.Cog):
                 set_user_stat(f"{stat}", f"{action}", value, user_id)
                 await ctx.reply(f"`{action}` `{stat}` for user <@{user_id}> for value `{value}`")
             except Exception as e:
-                await ctx.reply(f"There was an error: `{e}`")       
+                await ctx.reply(f"There was an error: `{e}`")      
+
+    @commands.command()
+    async def sex(self, ctx, user:discord.User = None):
+        if ctx.author.id == 345683515528183808:
+            if user is not None:
+                try:
+                    set_user_stat("user_level", "set", 0, user.id) 
+                    set_user_stat("current_xp", "set", 0, user.id)
+                    await ctx.reply(f"Set <@{user.id}>'s level and XP to 0")
+                
+                except Exception as e:
+                    await ctx.reply(f"OOPS!")
+                    print(f"There was a sex error: {e}")
+            else:
+                await ctx.reply("cant sex noone unlike you")
+        else:
+            await ctx.reply("no sex for you")
+        
+        
 
     #Sets the channel to send logs to in the database
     @commands.command()
