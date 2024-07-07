@@ -51,7 +51,10 @@ class Levels(commands.Cog):
                 member_new_level = member_level + 1
                 set_user_stat("user_level", "set", member_new_level, member_id) #Level the user up
                 set_user_stat("current_xp", "set", 0, member_id)# Reset their XP back to 0
-                await message.add_reaction("🎉")        #Not as annoying as a message.
+                try:
+                    await message.add_reaction("🎉")        #Not as annoying as a message.
+                except Exception as e:
+                    print(f"Error with level up reaction: {e}")
                 #await message.channel.send(f"<@{message.author.id}>, you have leveled up to level {member_new_level}!")           
     
     @app_commands.command(name="profile", description="Shows you a user's profile.")

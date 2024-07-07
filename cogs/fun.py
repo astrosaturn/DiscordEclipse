@@ -10,6 +10,7 @@ import openai
 import os
 import time
 from dotenv import load_dotenv
+from characterai import aiocai
 
 openai.api_key = (os.getenv("OPEN_AI_KEY"))
 
@@ -89,7 +90,7 @@ class Fun(commands.Cog):
         #for i, option in enumerate(options, start=1):
         #    embed.add_field(name="Options:", value=f"{i}. {option}\n", inline=False)
         embed.add_field(name="Options:", value=f"1. {options[0]}\n2. {options[1]}\n3. {options[2]}\n4. {options[3]}\n")
-        embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
+        embed.set_footer(text="Say the numerical position or type actual answer.", icon_url=interaction.user.avatar)
         msg = await interaction.original_response()
         await msg.edit(embed=embed)
         
@@ -121,13 +122,13 @@ class Fun(commands.Cog):
             msg = await interaction.original_response()
             await msg.edit(embed=embed)
     
-    @app_commands.command(name="chatgpt", description="Send a query to ChatGPT!")
-    async def chatgpt(self, interaction: discord.Interaction, query: str):
+    @app_commands.command(name="eclipseai", description="Use OpenAI to talk to Eclipse.")
+    async def eclipseai(self, interaction: discord.Interaction, query: str):
         if len(query) < 256:
             interaction_channel = interaction.channel_id
             await interaction.response.defer()
-            def get_completion(prompt, model="gpt-3.5-turbo"):
-                messages = [{"role": "user", "content": prompt}]
+            def get_completion(prompt, model="gpt-4-turbo"):
+                messages = [{"role": "user", "content": f"Your name is Eclipse, respond to this prompt in under 255 characters unless specifically instructed not to in the prompt: {prompt}"}]
                 response = openai.ChatCompletion.create(
                     model=model,
                     messages=messages,
@@ -146,7 +147,7 @@ class Fun(commands.Cog):
             )
 
             if (len(response) < 256):
-                embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'ChatGPT:\n {response}')
+                embed.add_field(name=f'{interaction.user.name}: "{query}"', value=f'Eclipse:\n {response}')
                 embed.set_footer(text=interaction.user.name, icon_url=interaction.user.avatar)
                 await msg.edit(embed=embed)
             else:
@@ -168,9 +169,7 @@ class Fun(commands.Cog):
             """
         else:
             await interaction.response.send_message("Your query must be under 256 characters!")
-            
+
             
 async def setup(bot):
     await bot.add_cog(Fun(bot))
-
-

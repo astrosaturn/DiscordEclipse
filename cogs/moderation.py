@@ -2,34 +2,55 @@ import discord
 from discord.ext import commands
 from databasemanager import *
 from discord import app_commands
-import threading
-import time
+from datetime import datetime
+import asyncio 
 
-class TestButton(discord.ui.View):
-    def __init__(self):
-        super().__init__()
-    
-    @discord.ui.button(label="TestButton",style=discord.ButtonStyle.red)
-    async def red_button(self, interaction:discord.Interaction, button:discord.ui.Button):
-        await interaction.response.edit_message(content="Success!")
-
-def check_mute_timers():
-
-    return
+activated = False
+"""
+async def check_mute_timers():
+    activated = True
+    print("Beginning mute check routine..")
+    while True:
+        await asyncio.sleep(2)
+        timestamp = int(datetime.now().timestamp())
+        users = check_mutes(timestamp)
+        print("Mutes checked..")
+"""
 
 class Moderation(commands.Cog):
+            
     def __init__(self, bot):
         self.bot = bot
         self.last_member = None
-    
+
+
     @commands.Cog.listener()
-    async def on_ready():
+    async def on_ready(self, message):
         print("Moderation cog ready.")
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if activated:
+            pass
+        else:
+            pass
+            #await check_mute_timers()
 
     @app_commands.command(name="mute", description="Mutes a user for X time.")
     async def mute(self, interaction: discord.Interaction, target:discord.Member, amount:int = None, reason:str = None):
-        return
+        timestamp = int(datetime.now().timestamp()) + amount
 
+
+        create_mute(target.id, timestamp, interaction.guild_id, reason)
+
+        await interaction.response.send_message(f"{target.name} has been muted for {amount} seconds for {reason}.")
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user): 
+        if user.id == 69:
+            if reaction.emoji == "🫃":
+                await reaction.remove(user)
+                print('no pregnant men allowed.')
 
     @app_commands.command(name="warn", description="Makes a case against the user as a warn.")
     async def warn(self, interaction:discord.Interaction, target:discord.Member, reason:str = None):
@@ -181,43 +202,49 @@ class Moderation(commands.Cog):
     async def setstat(self, ctx, user:discord.User, action: str, stat: str, value: int):
         action = action.lower()
         user_id = user.id
-        if ctx.author.id == 345683515528183808: # This is an owner only command, isOwner() doesn't work for some reason.
-            if user is not None:
-                if value is not None:
-                    if action == "add" or action == "remove" or action == "set" and action != None:
-                        try:
-                            set_user_stat(f"{stat}", f"{action}", value, user_id)
-                            await ctx.reply(f"`{action}` `{stat}` for user <@{user_id}> for value `{value}`")
-                        except Exception as e:
-                            await ctx.reply(f"There was an error: `{e}`")
-                    else:
-                        await ctx.reply("You must input a valid action!")
-                else:
-                    await ctx.reply("You must input a value!")
-            else:
-                await ctx.reply("You must enter a valid user!")
+
+        if user is None:
+            await ctx.reply("You must enter a valid user!")
+
+        elif action != "add" and action != "remove" and action != "set" or action == None:
+            await ctx.reply("You must input a valid action!")
+
+        elif value is None:
+            await ctx.reply("You must enter a valid value!")
+        
+        elif ctx.author.id != 345683515528183808: # This is an owner only command, isOwner() doesn't work for some reason.
+            ctx.reply("You do not have permission to use this command!")
+
         else:
-            await ctx.reply("You do not have permission to use this command.")          
+            try:
+                set_user_stat(f"{stat}", f"{action}", value, user_id)
+                await ctx.reply(f"`{action}` `{stat}` for user <@{user_id}> for value `{value}`")
+            except Exception as e:
+                await ctx.reply(f"There was an error: `{e}`")       
 
     #Sets the channel to send logs to in the database
     @commands.command()
     async def setlogchannel(self, ctx, channel:commands.TextChannelConverter):
         if ctx.author.guild_permissions.manage_channels:
-            
             guild_id = ctx.guild.id
             set_log_channel(channel.id, guild_id)
             await ctx.reply(f"The log channel has been set to <#{channel.id}>! in guild id `{guild_id}`!")
         else:
             await ctx.reply(f"You do not have permission to use this command!") 
 
-    @app_commands.command(name="pfp", description="temp pfp command. ignore.")
-    async def pfp(self, interaction: discord.Interaction):
-        await interaction.response.send_message(interaction.user.avatar)
+    @app_commands.command()
+    @app_commands.checks.cooldown(1, 15.0)
+    async def cooldowntest(self, interaction: discord.Interaction):
+        await interaction.response.send_message("This command is now on cooldown for 15 seconds.")
 
-    @app_commands.command(name="button", description="Button testing")
-    async def button(self, interaction: discord.Interaction):
-        await interaction.response.send_message(content="This is a button", view=TestButton())
-
+    @cooldowntest.error
+    async def cooldowntest_error(self, interaction: discord.Interaction, error: commands.CommandError):
+        error = str(error)
+        seconds = error.split("again in ", 1)
+        if isinstance(error, commands.CommandOnCooldown):
+            await interaction.response.send_message(str(error), ephemeral=True)
+        else:
+            await interaction.response.send_message(f"This command is on cooldown. {seconds[1]} left", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))

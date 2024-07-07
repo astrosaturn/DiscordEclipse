@@ -344,4 +344,3 @@ def check_mutes(current_time: int):
         f"SELECT user_id FROM muted_users WHERE mute_expiration < ?", (current_time,)
     )    
     return cur.fetchall()
-    
