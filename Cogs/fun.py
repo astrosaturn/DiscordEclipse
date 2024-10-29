@@ -10,7 +10,6 @@ import openai
 import os
 import time
 from dotenv import load_dotenv
-from characterai import aiocai
 
 openai.api_key = (os.getenv("OPEN_AI_KEY"))
 

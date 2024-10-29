@@ -115,7 +115,7 @@ class Currency(commands.Cog):
         print("User balance:", user_balance)
         if user_balance > 0:
 
-            if user_balance <= amount:
+            if user_balance < amount:
                     await interaction.response.send_message(f"{interaction.user.mention}, you can't gamble more than your current balance.")
             elif amount <= 0:
                 await interaction.response.send_message(f"{interaction.user.mention}, you can't gamble nothing. Input a value higher than 0.")
@@ -143,7 +143,7 @@ class Currency(commands.Cog):
                 new_bal = get_user_stat("credits", interaction.user.id)
                 embed.add_field(name="And loses.", value=f"{interaction.user.mention} has lost `{amount}` credits.\n Their new balance is `{new_bal}`.")
                         
-                await interaction.response.send_message(embed=embed)
+            await interaction.response.send_message(embed=embed)
         else:    
             await interaction.response.send_message(f"{interaction.user.mention} you don't have any coins to gamble, numbnuts.")
 
