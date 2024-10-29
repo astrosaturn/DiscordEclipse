@@ -120,7 +120,7 @@ class Fun(commands.Cog):
             
             msg = await interaction.original_response()
             await msg.edit(embed=embed)
-    
+    """
     @app_commands.command(name="eclipseai", description="Use OpenAI to talk to Eclipse.")
     async def eclipseai(self, interaction: discord.Interaction, query: str):
         if len(query) < 256:
@@ -157,7 +157,7 @@ class Fun(commands.Cog):
                 await interaction.channel.send(file=file)
 
             # Figure out a way to have it truncate at whitespace
-            """ 
+            
             if len(response) > 2:
                 for i in range(len(out)):
                     embedcont = discord.Embed(
@@ -165,9 +165,10 @@ class Fun(commands.Cog):
                     )
                     embedcont.add_field(name=' ', value=f"{out[i + 1]}")
                     await interaction.channel.send(embed=embedcont)     
-            """
+            
         else:
             await interaction.response.send_message("Your query must be under 256 characters!")
+    """
 
             
 async def setup(bot):
