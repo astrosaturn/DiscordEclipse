@@ -153,24 +153,29 @@ class Currency(commands.Cog):
         user_id = interaction.user.id
         user_balance = get_user_stat("credits", interaction.user.id)
         current_bank_balance = get_user_stat("bank", user_id)
-
+    
         if amount > 0:
             if action == "Withdraw":
                 if current_bank_balance > 0:
-                    set_user_stat("bank", "remove", amount, user_id)
-                    set_user_stat("credits", "add", amount, user_id)
-                    await interaction.response.send_message(f"{amount} credits have been withdrawed from your account. You now have {current_bank_balance - amount} credits in your bank.")
+                    if current_bank_balance >= amount: #i must be retarded because this was a bug for months lol
+                        set_user_stat("bank", "remove", amount, user_id)
+                        set_user_stat("credits", "add", amount, user_id)
+                        await interaction.response.send_message(f"{amount} credits have been withdrawed from your account. You now have {current_bank_balance - amount} credits in your bank.")
+                    else:
+                        await interaction.response.send_message(f"You cannot withdraw more than whats in your account.")
                 else:
                     await interaction.response.send_message("Can't withdraw if you have nothing to withdraw.")
                 
             elif action == "Deposit":
-                if user_balance > 0:
-                    set_user_stat("bank", "add", amount, user_id)
-                    set_user_stat("credits", "remove", amount, user_id)
-                    await interaction.response.send_message(f"{amount} credits have been deposited. Your bank balance is {current_bank_balance + amount} credits.")
+                if user_balance <= amount:
+                    if user_balance > 0:
+                        set_user_stat("bank", "add", amount, user_id)
+                        set_user_stat("credits", "remove", amount, user_id)
+                        await interaction.response.send_message(f"{amount} credits have been deposited. Your bank balance is {current_bank_balance + amount} credits.")
+                    else:
+                        await interaction.response.send_message("Can't deposit if you have nothing to deposit. Broke ass")
                 else:
-                    await interaction.response.send_message("Can't deposit if you have nothing to deposit. Broke ass")
-
+                    await interaction.response.send_message("You cant deposit more than what you currently have.")
             else:
                 await interaction.response.send_message("Please enter `withdraw` or `deposit`.")
         else:

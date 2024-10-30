@@ -22,8 +22,6 @@ class Fun(commands.Cog):
     async def on_ready():
         print("Fun cog ready.")
 
-#TODO: make these games linked with XP and a currency system
-
     #I am well aware I could just pick a random win, lose, or tie condition
     #However I wanted to show what the bot had picked to the player
     #So it seemed like an actual game
