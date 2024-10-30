@@ -153,7 +153,7 @@ class Currency(commands.Cog):
         user_id = interaction.user.id
         user_balance = get_user_stat("credits", interaction.user.id)
         current_bank_balance = get_user_stat("bank", user_id)
-    
+        
         if amount > 0:
             if action == "Withdraw":
                 if current_bank_balance > 0:

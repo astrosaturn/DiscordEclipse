@@ -217,24 +217,23 @@ class Moderation(commands.Cog):
         action = action.lower()
         user_id = user.id
 
-        if user is None:
-            await ctx.reply("You must enter a valid user!")
-
-        elif action != "add" and action != "remove" and action != "set" or action == None:
-            await ctx.reply("You must input a valid action!")
-
-        elif value is None:
-            await ctx.reply("You must enter a valid value!")
-        
-        elif ctx.author.id != 345683515528183808: # This is an owner only command, isOwner() doesn't work for some reason.
-            ctx.reply("You do not have permission to use this command!")
-
+        if user is not None:
+            if action == "add" or action == "remove" or action == "set":
+                if value is not None:
+                    if ctx.author.id == 345683515528183808: # This is an owner only command, isOwner() doesn't work for some reason.
+                        try:
+                            set_user_stat(f"{stat}", f"{action}", value, user_id)
+                            await ctx.reply(f"`{action}` `{stat}` for user <@{user_id}> for value `{value}`")
+                        except Exception as e:
+                            await ctx.send(f"There was an error: `{e}`")   
+                    else:
+                        ctx.reply("You do not have permission to use that command.")
+                else:
+                    ctx.reply("You must input a value.")
+            else:
+                ctx.reply("Must be a valid action!")
         else:
-            try:
-                set_user_stat(f"{stat}", f"{action}", value, user_id)
-                await ctx.reply(f"`{action}` `{stat}` for user <@{user_id}> for value `{value}`")
-            except Exception as e:
-                await ctx.reply(f"There was an error: `{e}`")      
+            ctx.reply("You must input a user!")     
 
     @commands.command()
     async def sex(self, ctx, user:discord.User = None):
