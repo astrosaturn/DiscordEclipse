@@ -225,7 +225,7 @@ class Moderation(commands.Cog):
                             set_user_stat(f"{stat}", f"{action}", value, user_id)
                             await ctx.reply(f"`{action}` `{stat}` for user <@{user_id}> for value `{value}`")
                         except Exception as e:
-                            await ctx.send(f"There was an error: `{e}`")   
+                            await print(f"There was an error: `{e}`")   
                     else:
                         ctx.reply("You do not have permission to use that command.")
                 else:
