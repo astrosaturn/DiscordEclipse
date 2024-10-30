@@ -254,7 +254,7 @@ class Moderation(commands.Cog):
         
     @commands.command()
     async def ver(self, ctx):
-        ctx.reply("Version 0.8.1")
+        await ctx.reply("Version 0.8.1")
 
     #Sets the channel to send logs to in the database
     @commands.command()
